@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.26823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NCF.Messenger", "NCF.Messenger\NCF.Messenger.fsproj", "{2DFCDDCC-090A-4C7F-8D25-5D97707886FF}"
 EndProject
