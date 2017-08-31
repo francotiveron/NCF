@@ -2,13 +2,7 @@
 
 open System.Runtime.InteropServices
 open ExcelDna.Integration.CustomUI
-open CitectAlarmHistory
-open NCF.Excel.UI
-
-//using Office = NetOffice.OfficeApi;
-//using Excel = NetOffice.ExcelApi;
-//using NetOffice.ExcelApi.Enums;
-//using NetOffice.ExcelApi.Tools.Utils;
+open System.Reflection
 
 [<ComVisible(true)>]
 type RibbonController() = 
@@ -20,24 +14,21 @@ type RibbonController() =
             <tabs>
                 <tab id='NCF' label='NCF'>
                     <group id='CitectAlarms' label='Citect Alarms'>
-                        <button id='queryButton' imageMso='NewPage' onAction='QueryLast24h' label='Last 24h' size='large' />
-                        <menu id='queryMenu' imageMso='NewPageLayout' description='Query Citect Alarm History' label='Query' size='large'>
-                            <button id='queryByTime' onAction='QueryByTime' label='By Time...' />
-                            <button id='queryByZone' onAction='QueryByZone' label='By Zone...' />
+                        <button id='queryCAHLast24hButton' imageMso='NewPage' onAction='QueryCAHLast24h' label='Last 24h' size='large' />
+                        <menu id='queryCAHMenu' imageMso='NewPageLayout' description='Query Citect Alarm History' label='Query' size='large'>
+                            <button id='queryCAHByTimeButton' onAction='QueryCAHByTime' label='By Time...' />
+                            <button id='queryCAHByZoneButton' onAction='QueryCAHByZone' label='By Zone...' />
                         </menu>
+                    </group>
+                    <group id='Resources' label='Resources'>
+                        <button id='abputButton' imageMso='Info' onAction='About' label='About'/>
                     </group>
                 </tab>
             </tabs>
             </ribbon>
         </customUI>
         "
-    member this.QueryByZone(control : IRibbonControl) =
-       let ok, ug, opd, wi, tFrom, tTo = UI.GetQueryParameters(true)
-       if ok then buildNewSheetFromQuery (Query (ug, opd, wi, tFrom, tTo)) else ()
-
-    member this.QueryByTime(control : IRibbonControl) =
-       let ok, _, _, _, tFrom, tTo = UI.GetQueryParameters()
-       if ok then buildNewSheetFromQuery (ByTime (tFrom, tTo)) else ()
-
-    member this.QueryLast24h(control : IRibbonControl) =
-       buildNewSheetFromQuery Last24H
+    member this.QueryCAHByZone(control : IRibbonControl) = CAH.getByZone()
+    member this.QueryCAHByTime(control : IRibbonControl) = CAH.getByTime()
+    member this.QueryCAHLast24h(control : IRibbonControl) = CAH.getLast24h()
+    member this.About(control : IRibbonControl) = UI.About(Assembly.GetExecutingAssembly().GetName().Version.ToString());

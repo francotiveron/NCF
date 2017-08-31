@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI onLoad="Ribbon_Load" xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+    <ribbon>
+        <tabs>
+            <tab id="NCF">
+                <group id="CitectAlarms" label="Citect Alarms">
+                    <menu id="queryMenu" imageMso="AccountingFormat" description="Query Citect Alarm History" label="Query" size="large">
+                        <button id="button1" label="button1" />
+                    </menu>
+                    <button id="queryButton" onAction="QueryLast24h" label="Last 24h" size="large" />
+                </group>
+                <group id="group1" label="group1">
+                    <menu id="menu1" imageMso="AccountingFormat" description="Query Citect Alarm History" label="Query" size="large">
+                        <button id="button2" label="button1" />
+                    </menu>
+                </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

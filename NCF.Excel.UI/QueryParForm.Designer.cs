@@ -1,4 +1,4 @@
-﻿namespace NCF.Excel.UI
+﻿namespace NCF.Excel.Forms
 {
     partial class QueryParForm
     {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NCF.Excel.UI
+namespace NCF.Excel.Forms
 {
     public partial class QueryParForm : Form
     {

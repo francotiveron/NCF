@@ -51,8 +51,10 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CitectAlarmHistory.fs" />
+    <Compile Include="XlUI.fs" />
+    <Compile Include="CAH.fs" />
     <Compile Include="Ribbon.fs" />
+    <Compile Include="AddIn.fs" />
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
     <None Include="Properties\ExcelDna.Build.props" />

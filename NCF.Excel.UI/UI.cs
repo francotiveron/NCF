@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NCF.Excel.Forms;
 
-namespace NCF.Excel.UI
+namespace NCF.Excel
 {
     public static class UI
     {
@@ -17,8 +14,10 @@ namespace NCF.Excel.UI
                 f.WithUG, f.WithOPD, f.WithWinder,
                 f.TimeFrom, f.TimeTo);
         }
-        public static void LongOpBegin()
+        public static void About(string version)
         {
+            AboutForm f = new AboutForm(version);
+            f.ShowDialog();
         }
     }
 }
