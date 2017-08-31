@@ -101,6 +101,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AboutForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "NCF.Excel - About";
             this.ResumeLayout(false);
             this.PerformLayout();
