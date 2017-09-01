@@ -4,8 +4,8 @@ open System
 open ExcelDna.Integration
 
 type AddIn () =
-    let _manageExc (x:obj) = 
-        match x with
+    let _manageExc x = 
+        match box x with
         | :? Exception -> box (x.ToString())
         | _ -> box "???"
 
