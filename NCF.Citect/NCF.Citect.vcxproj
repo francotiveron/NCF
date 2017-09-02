@@ -41,6 +41,9 @@
     <None Include="NCF_Win32.ci" />
     <None Include="NCF_Window.ci" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}</ProjectGuid>
