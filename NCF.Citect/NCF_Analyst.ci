@@ -1,0 +1,84 @@
+//Opens Analyst Popup as replication of a Trend Object (an=animation point)
+STRING NCFAnalystPens[8];
+REAL NCFAnalystScale0[8], NCFAnalystScale100[8];
+STRING NCFAnalystPensColor[8]="Y","G","R","CYAN","MAGENTA","W","B","GRAY";
+FUNCTION _NCF_Analyst_Popup(STRING sAN)
+	INT iAN = StrToInt(sAN);
+	INT i;
+
+	ProcessAnalystSelect(-2, "NCF_ANALYST_POPUP", "Analyst");
+	FOR i = 0 TO 7 DO
+		NCFAnalystPens[i] = TrnGetPen(iAN, i + 1);
+		IF NCFAnalystPens[i] <> "" THEN 
+			ProcessAnalystSetPen(i + 1, NCFAnalystPens[i], -2);
+			NCFAnalystScale0[i] = TrnGetScale(iAN, i + 1, 0);
+			NCFAnalystScale100[i] = TrnGetScale(iAN, i + 1, 100);
+		END
+	END
+	WinNewAt("NCF_ANALYST_POPUP", -1, -1, 1 + 2 + 64);
+	_NCF_Win32_NormalizeSystemMenu();
+END
+
+//Configure Analyst (called by Analyst Popup page once Process Analyst object has been inizialized)
+FUNCTION NCF_Analyst_Setup(STRING Analyst = "Analyst")
+   	OBJECT hPA, hOV, hOVCols, hPane, hPen;
+	INT i, iColor;
+	REAL rScale0, rScale100;
+
+	ErrSet(1);
+
+	hPA = _NCF_ActiveX_GetAX(Analyst);
+	
+	hOV = _NCF_ActiveX_Get(hPA, "ObjectView");
+	_ObjectSetProperty(hOV , "Height", 150);
+	iColor = _NCF_Misc_RGB("GRAY");
+	_ObjectSetProperty(hOV, "BackgroundColor", iColor);
+
+	hOVCols = _NCF_ActiveX_Get(hOV, "Columns");
+	_ObjectCallMethod(hOVCols, "Hide", "Error");
+	_ObjectCallMethod(hOVCols, "Show", "Comment");
+	_ObjectCallMethod(hOVCols, "Show", "Tag");
+	_ObjectCallMethod(hOVCols, "Show", "Sample Period");
+	hOVCols = NullObject;
+	hOV = NullObject;
+	
+	hPane = _NCF_ActiveX_Get(hPA, "Panes", 1);
+	iColor = _NCF_Misc_RGB("BLACK");
+	_ObjectSetProperty(hPane, "BackgroundColor", iColor);
+	
+	FOR i = 0 TO 7 DO
+		IF NCFAnalystPens[i] <> "" THEN
+			hPen = _NCF_ActiveX_Get(hPane, "Pens", i + 1);
+			rScale0 = NCFAnalystScale0[i];
+			rScale100 = NCFAnalystScale100[i];
+			_ObjectCallMethod(hPen, "PutVerticalAxisSpan", rScale0, rScale100);
+			iColor = _NCF_Analyst_PenColor(i);
+			_ObjectSetProperty(hPen, "LineColor", iColor);
+			hPen = NullObject;
+		ELSE
+			i = 8;
+		END
+	END
+	
+	hPane = NullObject;
+	hPA = NullObject;
+END
+PRIVATE INT FUNCTION _NCF_Analyst_PenColor(INT idx)
+	STRING tag = NCFAnalystPens[idx];
+	
+	IF StrSearch(0, tag, "PV") >= 0 THEN
+		IF idx < 3 THEN RETURN _NCF_Misc_RGB("Y"); ELSE RETURN _NCF_Misc_RGB("", 150, 150, 0); END
+	END
+	IF StrSearch(0, tag, "CSP") >= 0 THEN
+		IF idx < 4 THEN RETURN _NCF_Misc_RGB("CYAN"); ELSE RETURN _NCF_Misc_RGB("", 0, 150, 150); END
+	END
+	IF StrSearch(0, tag, "SP") >= 0 THEN
+		IF idx < 4 THEN RETURN _NCF_Misc_RGB("G"); ELSE RETURN _NCF_Misc_RGB("", 0, 150, 0); END
+	END
+	IF StrSearch(0, tag, "OP") >= 0 THEN
+		IF idx < 4 THEN RETURN _NCF_Misc_RGB("R"); ELSE RETURN _NCF_Misc_RGB("", 150, 0, 0); END
+	END
+	RETURN _NCF_Misc_RGB(NCFAnalystPensColor[idx]);
+END
+
+

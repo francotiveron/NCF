@@ -1,0 +1,122 @@
+FUNCTION _NCF_Faceplate(STRING sObj, STRING sFacePlate = "")
+	INT i = StrSearch(0, sObj, ",");
+	STRING sObj0 = "", sObj1 = "";
+	
+	IF i > 0 THEN 
+		sObj0 = StrLeft(sObj, i);
+		sObj1 = StrRight(sObj, StrLength(sObj) - i - 1);
+	ELSE
+		sObj0 = sObj;
+	END	
+
+	STRING sItem = _NCF_Def(sObj0, "ITEM");
+
+	IF WndFind(sItem) > 0 THEN //activate if already open
+		IF 0 = WinGoto(WinNumber(sTitle)) THEN
+			RETURN;
+		END
+	END
+
+	IF sFacePlate = "" THEN
+		sFaceplate = _NCF_Faceplate_FromObj(sObj0);
+	END
+	
+	IF sFacePlate = "" THEN RETURN; END
+	
+	_NCF_Faceplate_PreSet(sObj0, sObj1);
+	_NCF_Window_Popup(sFaceplate);
+	WinTitle(sItem);
+	WinSetName(sItem);
+	_NCF_Faceplate_PostSet(sObj0, sObj1);
+END
+
+PRIVATE STRING FUNCTION _NCF_Faceplate_FromObj(STRING sObj)
+	STRING sRet = "";
+	STRING sClass = _NCF_Def(sObj, "CLASS");
+	INT i = StrSearch(0, sClass, "_");
+	STRING sItf, sFcp;
+	
+	IF i > 0 THEN 
+		sItf = StrLeft(sClass, i);
+		sFcp = StrRight(sClass, StrLength(sClass) - i - 1);
+		sRet = "NCFPLT_" + sItf + "_" + sFcp;
+	ELSE
+		sItf = sClass;
+		sRet = "NCFPLT_" + sItf;
+	END	
+
+	RETURN sRet;
+END
+
+PRIVATE FUNCTION _NCF_Faceplate_PreSet(STRING sObj0, STRING sObj1 = "")
+	STRING EXT = _NCF_Def(sObj0, "EXT");
+
+	Ass(-2, "EXT", EXT, 0);
+	Ass(-2, "EXTI", EXT + "I", 0);
+	Ass(-2, "EXTR", EXT + "R", 0);
+	
+	IF sObj1 <> "" THEN
+		EXT = _NCF_Def(sObj1, "EXT");
+	
+		Ass(-2, "EXT1", EXT, 0);
+		Ass(-2, "EXT1I", EXT + "I", 0);
+		Ass(-2, "EXT1R", EXT + "R", 0);	
+	END
+END
+
+PRIVATE FUNCTION _NCF_Faceplate_PostSet(STRING sObj0, STRING sObj1 = "")
+	PageSetStr("OBJ", sObj0);
+	IF sObj1 <> "" THEN
+		PageSetStr("OBJ1", sObj1);
+	END
+END
+/*
+Trend faceplate initialization
+- an: Trend object's animation point number
+- pen: pen number (1..8)
+- tag: trend tag to associate to pen
+- scale0, scale100: range to assign to pen
+*/
+FUNCTION _NCF_Faceplate_Trend(STRING sAN)
+	STRING sObj = PageGetStr("OBJ"), sObj1, sClass = _NCF_Def(sObj, "CLASS"), sItem = _NCF_Def(sObj, "ITEM");
+	STRING sx, sScale0, sScale100;
+	STRING sField, sTrend;
+	INT idx, iAN;
+	REAL rScale0, rScale100;
+	
+	IF sClass = "PID" THEN
+		sObj1 = PageGetStr("OBJ1")
+		sx = _NCF_Def(sObj1, "EXT");
+		sScale0 = sx + "R[5]"; sScale100 = sx + "R[6]";
+		iAN = StrToInt(sAN);
+		rScale0 = TagRead(sScale0); rScale100 = TagRead(sScale100);
+		sx = _NCF_Def(sObj, "EXT");
+
+		FOR idx = 1 TO 8 DO
+			sField = DspGetEnv("TREND" + IntToStr(idx));
+			SELECT CASE sField 
+				CASE "OP"
+					sTrend = sItem + "_" + sField + "_TRN";
+					_NCF_Trend_SetPen(iAN, idx, sTrend, 0, 100);
+				CASE "SP", "PV"
+					sTrend = sItem + "_" + sField + "_TRN";
+					_NCF_Trend_SetPen(iAN, idx, sTrend, rScale0, rScale100);
+				CASE ELSE
+					idx = 8;
+			END SELECT
+		END
+	ELSE !AI
+		sx = _NCF_Def(sObj, "EXT");
+		sScale0 = sx + "R[5]"; sScale100 = sx + "R[6]"
+		iAN = StrToInt(sAN);
+		rScale0 = TagRead(sScale0); rScale100 = TagRead(sScale100);
+	
+		sField = DspGetEnv("TREND" + IntToStr(1))
+		IF sField <> "" THEN
+			sTrend = sItem + "_" + sField + "_TRN";
+			_NCF_Trend_SetPen(iAN, idx, sTrend, rScale0, rScale100);
+		END
+	END;
+END
+
+

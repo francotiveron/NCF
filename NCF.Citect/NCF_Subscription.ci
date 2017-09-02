@@ -1,0 +1,22 @@
+MODULE STRING cL2FeSTA = "L2CR_53FE001_EXT[6]";
+MODULE STRING cL2CrSTA = "L2CR_53MOTA01_EXT[6]";
+MODULE INT hSubsL2FeSTA = -1;
+MODULE INT hSubsL2CrSTA = -1;
+
+FUNCTION _NCF_Subscription_Init(INT ug1opd2)
+	SELECT CASE ug1opd2
+		CASE 1;
+			hSubsL2FeSTA = TagSubscribe(cL2FeSTA, 10000, "Raw", -1.0, "_NCF_Subscription_OnValuseChange");
+			hSubsL2CrSTA = TagSubscribe(cL2CrSTA, 10000, "Raw", -1.0, "_NCF_Subscription_OnValuseChange");
+		CASE 2;
+	END SELECT
+END
+
+FUNCTION _NCF_Subscription_OnValuseChange(INT h)
+	STRING subsVal;
+
+	SELECT CASE h
+		CASE hSubsL2FeSTA, hSubsL2CrSTA
+			PMORE_L2CR_RUNNING = (L2CR_53FE001_EXT[6] BITAND 0x20) AND (L2CR_53MOTA01_EXT[6] BITAND 0x40);
+	END SELECT
+END

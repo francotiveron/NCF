@@ -1,0 +1,33 @@
+STRING FUNCTION _NCF_Def(STRING sObj = "", STRING sProperty = "")
+	INT i;
+
+	SELECT CASE sProperty
+		CASE "CLASS" RETURN _NCF_Def_Class(sObj);
+		CASE "ITEM" RETURN _NCF_Def_Item(sObj);
+		CASE "EXT"  RETURN _NCF_Def_EXT(sObj);
+	END SELECT
+END
+
+PRIVATE STRING FUNCTION _NCF_Def_Call(STRING sFunction, STRING sSignature, STRING sArgs = "")
+	STRING sRet = "";
+	INT h = _NCF_DLL_Open(csNcfDefPath, sFunction, sSignature);
+
+	IF h >= 0 THEN
+		sRet = _NCF_DLL_Call(h, sArgs);
+		_NCF_DLL_Close(h)
+	END
+	
+	RETURN sRet;
+END
+
+PRIVATE STRING FUNCTION _NCF_Def_Class(STRING sObj)
+	INT i = StrSearch(0, sObj, ".");
+	RETURN StrLeft(sObj, i);	
+END
+PRIVATE STRING FUNCTION _NCF_Def_Item(STRING sObj)
+	INT i = StrSearch(0, sObj, ".");
+	RETURN StrRight(sObj, StrLength(sObj) - i - 1);
+END
+PRIVATE STRING FUNCTION _NCF_Def_EXT(STRING sObj)
+	RETURN _NCF_Def_Item(sObj) + "_EXT";
+END

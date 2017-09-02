@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Cicode Files">
+      <UniqueIdentifier>{46c4b698-8309-4b87-ae78-f3414a405ee6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Citect.ini" />
+    <None Include="NCF_ActiveX.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Analyst.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Animation.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Background.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Debug.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Def.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_DLL.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Entry.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Ext.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Faceplate.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Format.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Interlocks.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Main.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Misc.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_NAC.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Startup.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Subscription.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Trend.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Win32.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+    <None Include="NCF_Window.ci">
+      <Filter>Cicode Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

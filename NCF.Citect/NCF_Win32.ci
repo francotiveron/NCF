@@ -1,0 +1,20 @@
+//Win API interface
+
+//Restore default window system menu (special Citect menu items are removed)
+FUNCTION _NCF_Win32_NormalizeSystemMenu(INT hWnd = -1)
+	IF hWnd < 0 THEN hWnd = WinGetWndHnd(); END
+	_NCF_Win32_GetSystemMenu(hWnd, 1);
+END
+
+//Restore default window system menu (special Citect menu items are removed)
+PRIVATE INT FUNCTION _NCF_Win32_GetSystemMenu(INT hWnd, INT bRevert)
+	INT iRet = -1;
+	INT hGetSystemMenu = _NCF_DLL_Open("USER32.DLL", "GetSystemMenu", "JJI");
+
+	IF hGetSystemMenu >= 0 THEN
+		iRet = _NCF_DLL_Call(hGetSystemMenu, IntToStr(hWnd) + ", " + IntToStr(bRevert));
+		_NCF_DLL_Close(hGetSystemMenu);
+	END
+	
+	RETURN iRet;
+END

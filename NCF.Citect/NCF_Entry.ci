@@ -1,0 +1,58 @@
+FUNCTION NCF_Entry(STRING type, STRING title, STRING tag, STRING obj = "", STRING sP1 = "")
+	STRING sObj;
+	IF obj = "" THEN 
+		sObj = PageGetStr("OBJ");
+	ELSE
+		sObj = obj;
+	END
+	STRING EXT = _NCF_Def(sObj, "EXT");
+	STRING sTitle = _NCF_Def(sObj, "ITEM") + " - " + title;
+	STRING sTag = EXT + tag;
+
+	SELECT CASE type
+		CASE "REAL" NCF_Entry_R(sTitle, sTag);
+		CASE "BYTE100" NCF_Entry_Byte100(sTitle, sTag, sP1);
+	END SELECT
+	
+END
+//Gets floating point input from user with numeric pad and write to tag
+PRIVATE FUNCTION NCF_Entry_R(STRING title, STRING tag)
+	REAL r = StrToReal(TagRead(tag, 0));
+    STRING s = FormNumPad(title, r, 20);
+	IF IsError = 0 THEN TagWrite(tag, s, 0); END
+END
+
+//Gets input from user with numeric pad, 0..100 -> 0.255, write to INT16 tag MSB or LSB
+FUNCTION NCF_Entry_Byte100(STRING title, STRING tag, STRING MSB = "")
+	INT n = StrToInt(TagRead(tag, 0));
+	INT _msb = 0; IF MSB = "1" THEN _msb = 1; END
+    STRING s = FormNumPad(title, _NCF_Entry_GetByte100(n, _msb));
+	IF IsError <> 0 THEN RETURN; END
+	REAL r = StrToReal(s);
+	r = Max(r, 0.0); r = Min(r, 100.0);
+	_NCF_Entry_SetByte100(tag, r, _msb);
+END
+
+PRIVATE INT FUNCTION _NCF_Entry_GetByte100(INT n, INT MSB = 0)	
+	INT _msb, _lsb, i, ret;
+	i = n BITAND 0xFFFF;
+	_msb = i / 256;
+	_lsb = i MOD 256;
+	IF MSB THEN i = _msb; ELSE i = _lsb; END
+	ret = i * 0.3921568627450980392156862745098; !100/255
+	RETURN ret;
+END
+PRIVATE FUNCTION _NCF_Entry_SetByte100(STRING tag, INT val, INT MSB = 0)	
+	INT n = StrToInt(TagRead(tag, 0));
+	INT _msb, _lsb, i, ret;
+	i = n BITAND 0xFFFF;
+	_msb = i / 256;
+	_lsb = i MOD 256;
+	i = val / 0.3921568627450980392156862745098;
+	IF MSB THEN _msb = i; ELSE _lsb = i; END
+	REAL r = _msb * 256.0 + _lsb;
+	n = r;
+	IF (n BITAND 0x8000) = 0x8000 THEN n = n BITOR 0xFFFF0000; END
+	TagWrite(tag, n, 0);
+END
+

@@ -1,0 +1,55 @@
+//Internal ActiveX functions
+MODULE INT _NCFMaxAXTrials = 100;
+
+//Get ActiveX Object
+OBJECT FUNCTION _NCF_ActiveX_GetAX(STRING id)
+	OBJECT ret;
+	INT i = 0, e = 0;
+	
+	WHILE NOT ObjectIsValid(ret) DO //Continue requesting object until valid (initialized)
+		IF i > _NCFMaxAXTrials THEN RETURN NullObject; END
+		SleepMS(50);
+		ret = ObjectByName(id);
+		e = IsError();
+		i = i + 1;
+	END	
+	RETURN ret;
+END
+
+//Get ActiveX object property or collection item
+OBJECT FUNCTION _NCF_ActiveX_Get(OBJECT obj, STRING prop, INT index = -1)
+	OBJECT ret, coll_item;
+	INT i = 0;
+
+	ErrSet(1);
+	WHILE NOT ObjectIsValid(ret) DO //Continue requesting object until valid (initialized)
+		IF i > _NCFMaxAXTrials THEN RETURN NullObject; END
+		SleepMS(50);
+		ret = _OBJECTGetProperty(obj, prop);
+		i = i + 1;
+	END
+	IF index >= 0 THEN //Collection item
+		i = 0;
+		WHILE NOT ObjectIsValid(coll_item) DO //Continue requesting object until valid (initialized)
+			IF i > _NCFMaxAXTrials THEN RETURN NullObject; END
+			SleepMS(50);
+			coll_item = _ObjectCallMethod(ret, "get_Item", index);
+			i = i + 1;
+		END
+		ret = coll_item;
+		coll_item = NullObject;
+	END
+	RETURN ret;
+END
+
+//Set ActiveX object property
+FUNCTION _NCF_ActiveX_Set(OBJECT obj, STRING prop, STRING val)
+	INT ret = -1, i = 0;
+	ErrSet(1);
+	WHILE ret <> 0 DO //Continue requesting object until valid (initialized)
+		IF i > _NCFMaxAXTrials THEN RETURN; END
+		SleepMS(50);
+		ret = _OBJECTSetProperty(obj, prop, val);
+		i = i + 1;
+	END
+END

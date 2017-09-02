@@ -1,0 +1,95 @@
+STRING csNCFMessengerDLL = "NCF.Messenger.DLL";
+STRING csNCFSendAlarmEvent = "NCFx_Send_AlarmEvent";
+STRING csNCFSendAlarmEvent_Signature = "JC";
+STRING csSeparator = "~";
+
+FUNCTION _NCF_Ext_AlarmQue_Task(STRING zone)
+	!STRING sNCFMessengerPath = PathToStr("[USER]:\NCF\" + csNCFMessengerDLL);
+	STRING sNCFMessengerPath = PathToStr(csNCFMessengerDLL);
+	INT hNCFSendAlarmEvent = -1;
+
+	WHILE hNCFSendAlarmEvent < 0 DO
+		hNCFSendAlarmEvent = _NCF_DLL_Open(sNCFMessengerPath, csNCFSendAlarmEvent, csNCFSendAlarmEvent_Signature);
+		IF hNCFSendAlarmEvent < 0 THEN
+			_NCF_Debug_Log("Can't Open NCF.Messenger.DLL");
+			Sleep(1);
+		END;
+	END;
+	
+	INT hQue = -1, nRecord, nRet, nRec, hBrowse, iInit = 0;
+	STRING sAlarmFmt, sArgs, sTimeFilter;
+	
+	sTimeFilter = "TIME>" + _NCF_Ext_UpdateHistoricalTime();
+	WHILE iInit = 0 DO
+		hBrowse = AlmBrowseOpen(sTimeFilter, "");
+		IF hBrowse <> -1 THEN
+			nRet = AlmBrowseFirst(hBrowse);
+			WHILE nRet = 0 DO
+				sAlarmFmt = zone
+					+ csSeparator + AlmBrowseGetField(hBrowse, "TAG")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "NAME")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "DESC")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "STATE")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "AREA")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "PRIORITY")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "DATEEXT")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "TIME")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "ONDATEEXT")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "ONTIME")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "OFFDATEEXT")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "OFFTIME")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "ACKDATEEXT")
+					+ csSeparator + AlmBrowseGetField(hBrowse, "ACKTIME")
+					;
+					
+					//_NCF_Debug_Log(sAlarmFmt);
+					sArgs = "^"" + sAlarmFmt + "^"";
+					nRet = _NCF_DLL_Call(hNCFSendAlarmEvent, sArgs);
+
+				nRet = AlmBrowseNext(hBrowse);
+			END;
+			AlmBrowseClose(hBrowse);
+			iInit = 1;
+		ELSE
+			_NCF_Debug_Log("Can't Browse Alarms");
+			Sleep(1);
+		END;
+	END;
+
+	INT iCycle = 0;
+	WHILE TRUE DO    
+		IF hQue < 0 THEN
+			hQue = AlarmEventQue();
+			IF hQue < 0 THEN _NCF_Debug_Log("Can't Open Alarm's Queue"); END;
+			Sleep(1);
+		END
+	
+		IF hQue >= 0 THEN
+			iCycle = iCycle + 1;
+			IF iCycle >= 60 THEN
+				iCycle = 0;
+				_NCF_Ext_UpdateHistoricalTime();
+			END;
+			nRec = QueLength(hQue);
+			WHILE nRec > 0 DO
+				nRet = QueRead(hQue, nRecord, sAlarmFmt, 1);
+				IF nRet = 0 THEN
+					//_NCF_Debug_Log(sAlarmFmt);
+					sArgs = "^"" + zone + csSeparator + sAlarmFmt + "^"";
+					nRet = _NCF_DLL_Call(hNCFSendAlarmEvent, sArgs);
+
+				END;
+				nRec = QueLength(hQue);
+			END;
+			Sleep(1);
+		END;
+		Sleep(0);
+	END
+END
+
+PRIVATE STRING FUNCTION _NCF_Ext_UpdateHistoricalTime()
+	STRING sFilePath = PathToStr("[USER]:\NCF\NcfPar.ini");
+	STRING sVal = WndGetFileProfile("AlarmHistory", "LastTime", "0", sFilePath);
+	WndPutFileProfile("AlarmHistory", "LastTime", IntToStr(TimeCurrent()), sFilePath)
+	RETURN sVal;
+END

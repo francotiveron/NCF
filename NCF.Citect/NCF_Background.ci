@@ -1,0 +1,34 @@
+MODULE INT _time, _tMin, _tSec
+
+FUNCTION _NCF_Background_Task(STRING who)
+	WHILE 1 DO
+		_time = TimeCurrent(); _tMin = TimeMin(_time); _tSec = TimeSec(_time);
+		SELECT CASE StrUpper(who)
+			CASE "NPMUGround.NPMUGPriIOS" _NCF_Background_UG_PRIMARY_IO();
+			CASE "NPMUGround.NPMUGStaIOS" _NCF_Background_UG_STANDBY_IO();
+		END SELECT
+		
+		Sleep(1);
+	END
+END
+
+PRIVATE FUNCTION _NCF_Background_UG_PRIMARY_IO()
+	_NCF_Background_UG_CheckWinderOPCTunneller();
+END
+
+PRIVATE FUNCTION _NCF_Background_UG_STANDBY_IO()
+	_NCF_Background_UG_CheckWinderOPCTunneller();
+END
+
+PRIVATE FUNCTION _NCF_Background_UG_CheckWinderOPCTunneller()
+	IF _tSec = 20 THEN
+		TaskNew("_Async_UG_CheckWinderOPCTunneller", "", 8);
+	END
+END
+
+PRIVATE FUNCTION _Async_UG_CheckWinderOPCTunneller()
+	INT iStatus = IODeviceInfo("CVT", 10);
+	IF iStatus = 16 THEN
+		Exec("Powershell C:\Citect\User\NCF\ResetWinderOPCTunneller.ps1", 6);
+	END
+END

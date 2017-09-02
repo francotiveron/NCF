@@ -1,0 +1,27 @@
+FUNCTION NCF_Startup(STRING who)
+	SELECT CASE StrUpper(who)
+		CASE "NPM_OPD.NPMOPDPRIALM","NPM_OPD.NPMOPDSTAALM" NCF_Startup_AlarmServer("OPD");
+		CASE "NPMUGround.NPMUGPriAlm","NPMUGround.NPMUGStaAlm" NCF_Startup_AlarmServer("UG");
+		CASE "NPM_OPD.QUANTUM1" NCF_Startup_IOServer(2, 1);
+		CASE "NPM_OPD.QUANTUM2" NCF_Startup_IOServer(2, 2);
+		CASE "NPMUGround.NPMUGPriIOS" NCF_Startup_IOServer(1, 1);
+		CASE "NPMUGround.NPMUGStaIOS" NCF_Startup_IOServer(1, 2);
+	END SELECT
+	TaskNew("_NCF_Background_Task", "^"" + who + "^"", 0);
+END
+
+FUNCTION NCF_Startup_Client()
+END
+
+FUNCTION NCF_Startup_AlarmServer(STRING zone)
+	TaskNew("_NCF_Ext_AlarmQue_Task", "^"" + zone + "^"", 0);
+END
+
+FUNCTION NCF_Startup_IOServer(INT ug1opd2, INT pri1sby2)
+	SELECT CASE ug1opd2
+		CASE 1;
+		CASE 2
+			TaskNew("NCF_NAC_CR02_Task", "", 0);
+	END SELECT
+	_NCF_Subscription_Init(ug1opd2);
+END

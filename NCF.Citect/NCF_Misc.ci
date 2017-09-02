@@ -1,0 +1,51 @@
+INT FUNCTION NCF_Misc_Check_Val(INT val, STRING check)
+	INT ret = 0, iArg, iNeg = 0;
+
+	IF StrLeft(check, 1) = "!" THEN
+		iNeg = 1
+		check = StrRight(check, StrLength(check) - 1);
+	END
+
+	IF StrLeft(check, 1) = "=" THEN
+		iArg = StrToInt(StrRight(check, StrLength(check) - 1));
+		IF val = iArg THEN ret = 1 ELSE ret = 0 END
+	ELSE
+		iArg = StrToInt(check);
+		ret = val BITAND iArg;
+	END
+
+	IF iNeg THEN
+		ret = NOT ret;
+	END
+
+	RETURN ret;
+END
+
+REAL FUNCTION NCF_Misc_IIF(INT cond, REAL r1, REAL r0)
+	IF cond <> 0 THEN
+		RETURN r1;
+	ELSE
+		RETURN r0;
+	END
+END
+
+//RGB color utility
+INT FUNCTION _NCF_Misc_RGB(STRING c = "", INT r = 0, INT g = 0, INT b = 0)
+	INT iRed, iGreen, iBlue;
+	SELECT CASE StrUpper(c)
+		CASE "RED","R" iRed = 255; iGreen = 0; iBlue = 0;
+		CASE "BLUE","B" iRed = 0; iGreen = 0; iBlue = 255;
+		CASE "YEL","Y","YELLOW" iRed = 255; iGreen = 255; iBlue = 0;
+		CASE "GRE","G","GREEN" iRed = 0; iGreen = 255; iBlue = 0;
+		CASE "CYAN" iRed = 0; iGreen = 255; iBlue = 255;
+		CASE "MAGENTA" iRed = 255; iGreen = 0; iBlue = 255;
+		CASE "WHI", "W", "WHITE" iRed = 255; iGreen = 255; iBlue = 255;
+		CASE "BLA", "B", "BLACK" iRed = 0; iGreen = 0; iBlue = 0;
+		CASE "GRAY" iRed = 191; iGreen = 191; iBlue = 191;
+		CASE ELSE iRed = r; iGreen = g; iBlue = b;
+	END SELECT
+	RETURN (iBlue * 256 + iGreen ) * 256 + iRed;
+END
+
+
+

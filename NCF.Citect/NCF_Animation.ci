@@ -1,0 +1,57 @@
+INT FUNCTION NCF_Animation_Color(INT iStatus, INT iMode)
+	INT ret = 0;
+	STRING sClass;
+	
+	SELECT CASE iStatus
+		CASE 1 !Run
+			SELECT CASE iMode
+				CASE 1 !Local
+					ret = 2
+				CASE 2 !Manual
+					ret = 4
+				CASE 3 TO 5 !SemiAuto, Auto, Batch
+					ret = 7
+				CASE ELSE
+					ret = 0
+			END SELECT
+		CASE 2 !Stop
+			SELECT CASE iMode
+				CASE 1 !Local
+					ret = 1
+				CASE 2 !Manual
+					ret = 3
+				CASE 3 TO 5 !SemiAuto, Auto, Batch
+					ret = 5
+				CASE ELSE
+					ret = 0
+			END SELECT
+		CASE 3 !Starting
+			SELECT CASE iMode
+				CASE 1 !Local
+					ret = 2
+				CASE 2 !Manual
+					ret = 4
+				CASE 3 TO 5 !SemiAuto, Auto, Batch
+					ret = 6
+				CASE ELSE
+					ret = 0
+			END SELECT
+		CASE 4 !Stopping
+			SELECT CASE iMode
+				CASE 1 !Local
+					ret = 2
+				CASE 2 !Manual
+					ret = 4
+				CASE 3 TO 5 !SemiAuto, Auto, Batch
+					ret = 8
+				CASE ELSE
+					ret = 0
+			END SELECT
+		CASE 5 !Fault
+			ret = 9
+		CASE ELSE
+			ret = 0;
+	END SELECT
+	
+	RETURN ret;
+END

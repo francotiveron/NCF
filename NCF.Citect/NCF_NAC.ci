@@ -1,0 +1,150 @@
+INT NAC_CR02_rTable_Size = 300;
+REAL NAC_CR02_rTable[300]; //used in TrnGetTable
+INT NAC_CR02_NOW;
+
+FUNCTION NCF_NAC_CR02_Task()
+    INT n, iPeriod, INT iActive, hTask1 = -1;
+    STRING szDi = "";
+    STRING sMachineName;
+
+	ErrSet(1);
+	
+	WHILE (1) DO
+		iActive = 1;
+		sMachineName = ServerInfo("Client", 0);
+		IF sMachineName = "AUNPMZCS3" THEN
+			IF ServerIsOnline("NPM_OPD.QUANTUM1") THEN
+				iActive = 0;
+			END
+		END
+		IF iActive THEN
+			NAC_CR02_NOW = StrToDate(Date(2)) + StrToTime(Time(1));
+			NAC_CR02_ParametersValidation();
+	
+			NAC_CR02_ASRiHeartBeatManagement();
+			NAC_CR02_NACHeartBeatManagement();
+			IF hTask1 > -1 THEN TaskKill(hTask1); END;
+			hTask1 = TaskNew("NAC_CR02_Next_Prog", "", 8);
+			
+			CR02_NAC_OFF_BY_ASRI = (CR02_NAC_OFF_BY_ASRI OR CR02_ASRi_NAC_ENABLED1) AND CR02_ASRi_ALM_COMFLT = 1;
+			CR02_NAC_OFF_BY_ONLINE = (NAC_OFF_BY_ONLINE OR CR02_ASRi_NAC_ENABLED1) AND NOT CR02_ASRi_NAC_ONLINE;
+			CR02_NAC_OFF_BY_READY = (CR02_NAC_OFF_BY_READY OR CR02_ASRi_NAC_ENABLED1) AND NOT CR02_ASRi_NAC_READY;
+			
+	//		IF CR02_NAC_OFF_BY_ASRI OR CR02_NAC_OFF_BY_ONLINE OR CR02_NAC_OFF_BY_READY THEN
+	//			CR02_ASRi_NAC_ENABLED1 = 0;
+	//		END
+			
+			CR02_ASRi_NAC_PRES_ACTUAL = CR02_ASRi_PressurePeakAvg;
+			NAC_CR02_PressureSpikesManagement();	//CR02_ASRi_NAC_CR02_PRES_SPIKES_DIF => NAC
+			
+			CR02_ASRi_NAC_POWER_ACTUAL = CR02_ASRi_PowerAvg;
+			CR02_ASRi_NAC_CSS_ACTUAL = CR02_ASRi_CSS;		
+			CR02_ASRi_NAC_CSS_LIMIT = CR02_ASRi_CurrentCrusherProg_dMinCSS;
+			CR02_ASRi_NAC_ASRI_PROG_ACTUAL = CR02_ASRi_Selected_Program;
+	
+			IF CR02_ASRi_NAC_ENABLED1 THEN
+				CR02_ASRi_Selected_Program = CR02_ASRi_NAC_ASRI_PROG_SP;
+			END
+			
+			//Citect HeartBeat to NAC
+			CR02_ASRi_NAC_CIT_BEAT = (CR02_ASRi_NAC_CIT_BEAT + 1) MOD 32767;
+		END;
+		SleepMS(1000);
+	END
+END
+
+PRIVATE FUNCTION NAC_CR02_ParametersValidation()
+	CR02_ASRi_NAC_HCP_SP = Min(CR02_ASRi_NAC_HCP_SP, 300);
+END
+
+INT iCurASRi02Beat, iPrevASRi02Beat, iASRi02BeatUnchangedCounter;
+PRIVATE FUNCTION NAC_CR02_ASRiHeartBeatManagement()
+	iCurASRi02Beat = CR02_ASRi_HeartBeat_Integer;
+	IF CR02_ASRi_ALM_COMFLT AND iASRi02BeatUnchangedCounter < 10 THEN
+		iASRi02BeatUnchangedCounter = iASRi02BeatUnchangedCounter + 1;
+		iPrevASRi02Beat = iCurASRi02Beat;
+		RETURN;
+	END
+	IF iCurASRi02Beat = iPrevASRi02Beat 
+	   OR (
+	   	   CR02_ASRi_NAC_ENABLED1
+	   	   AND CR02_ASRi_NAC_ENABLED1 <> CR02_ASRi_NAC_ASRI_PROG_SP
+	   	  )
+	   THEN
+		IF NOT CR02_ASRi_ALM_COMFLT THEN
+			iASRi02BeatUnchangedCounter = iASRi02BeatUnchangedCounter + 1;
+			IF iASRi02BeatUnchangedCounter >= 5 THEN
+				CR02_ASRi_ALM_COMFLT = 1;
+			END
+		END
+	ELSE
+		CR02_ASRi_ALM_COMFLT = 0;
+		iASRi02BeatUnchangedCounter = 0;
+	END
+	iPrevASRi02Beat = iCurASRi02Beat;
+END
+
+
+INT iCurNac02Beat, iPrevNac02Beat, iNac02BeatUnchangedCounter;
+PRIVATE FUNCTION NAC_CR02_NACHeartBeatManagement()
+	iCurNac02Beat = CR02_ASRi_NAC_BEAT;
+	IF NOT CR02_ASRi_NAC_ONLINE AND iNac02BeatUnchangedCounter < 205 THEN
+		iNac02BeatUnchangedCounter = iNac02BeatUnchangedCounter + 1;
+		iPrevNac02Beat = iCurNac02Beat;
+		RETURN;
+	END
+	IF iCurNac02Beat = iPrevNac02Beat THEN
+		IF CR02_ASRi_NAC_ONLINE THEN
+			iNac02BeatUnchangedCounter = iNac02BeatUnchangedCounter + 1;
+			IF iNac02BeatUnchangedCounter > 200 THEN
+				CR02_ASRi_NAC_ONLINE = 0;
+			END
+		END
+	ELSE
+		CR02_ASRi_NAC_ONLINE = 1;
+		iNac02BeatUnchangedCounter = 0;
+	END
+	iPrevNac02Beat = iCurNac02Beat;
+END
+
+REAL rASRi02PrevPressPeakAvg;
+INT iScansFromLastPressurePeak02, iPreSpikesCnt02, iCurSpikesCnt02;
+PRIVATE FUNCTION NAC_CR02_PressureSpikesManagement()
+	REAL rASRiCurrPressPeakAvg = CR02_ASRi_NAC_PRES_ACTUAL;
+	
+	iScansFromLastPressurePeak02 = iScansFromLastPressurePeak02 + 1;
+    IF iScansFromLastPressurePeak02 >= 5 AND rASRiCurrPressPeakAvg > CR02_ASRi_NAC_PRES_LIMIT AND rASRi02PrevPressPeakAvg <= CR02_ASRi_NAC_PRES_LIMIT THEN
+    	iCurSpikesCnt02 = (iPreSpikesCnt02 + 1) MOD 32767;
+    	CR02_ASRi_NAC_PRES_SPIKES_TOT = iCurSpikesCnt02;
+//    	iTmpSpikesCnt = (CR02_ASRi01_Pressure_Peak_Counter + 1) MOD 2000;
+//    	CR02_ASRi01_Pressure_Peak_Counter = iTmpSpikesCnt;
+    	iScansFromLastPressurePeak02 = 0;
+    END
+    rASRi02PrevPressPeakAvg = rASRiCurrPressPeakAvg;
+    
+    INT iSpikesAtHCP, iHCPTime, n;
+    iHCPTime= DateSub(StrToDate(Date(2)) + StrToTime(Time(1)), CR02_ASRi_NAC_HCP_SP * 60);
+    !TrnGetTable(Tag, Time, Period, Length, Table, DisplayMode, Milliseconds [, sClusterName] )
+	n = TrnGetTable("CR02_ASRi_NAC_PRES_SPIKES_TOT", iHCPTime, 1, 1, NAC_CR02_rTable, 1, 0, "NPM_OPD");
+	IF n > 0 THEN CR02_ASRi_NAC_PRES_SPIKES_HCP = NAC_CR02_rTable[0]; ELSE CR02_ASRi_NAC_PRES_SPIKES_HCP = CR02_ASRi_NAC_PRES_SPIKES_TOT; END
+	CR02_ASRi_NAC_PRES_SPIKES_DIF = CR02_ASRi_NAC_PRES_SPIKES_TOT - CR02_ASRi_NAC_PRES_SPIKES_HCP;
+
+	iPreSpikesCnt02 = TagRead("CR02_ASRi_NAC_PRES_SPIKES_TOT");
+END
+
+PRIVATE FUNCTION NAC_CR02_Next_Prog()
+	ErrSet(1);
+	INT prog = CR02_ASRi_NAC_ASRI_PROG_SP;
+	STRING nextProg;
+	IF prog > 0 THEN
+		nextProg = IntToStr(prog - 1);
+		CR02_ASRi_NextCrusherProg_iControlMode = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_iControlMode.V");
+		CR02_ASRi_NextCrusherProg_dCSSSetpoint1 = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_dCSSSetpoint1.V");
+		CR02_ASRi_NextCrusherProg_dCSSSetpoint2 = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_dCSSSetpoint2.V");
+		CR02_ASRi_NextCrusherProg_iTimeShare = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_iTimeShare.V");
+		CR02_ASRi_NextCrusherProg_iMaxPower = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_iMaxPower.V");
+		CR02_ASRi_NextCrusherProg_dMaxPressure = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_dMaxPressure.V");
+		CR02_ASRi_NextCrusherProg_dMinCSS = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_dMinCSS.v");
+		CR02_ASRi_NextCrusherProg_dCSSStartFactor = TagReadEx("CR02_ASRi_aryCrusherProgs_" + nextProg + "_dCSSStartFactor.V");
+	END;
+END

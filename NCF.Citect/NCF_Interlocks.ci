@@ -1,0 +1,123 @@
+//Call specific interlock function to retrieve interlocks definition
+FUNCTION _NCF_Interlocks(STRING obj = "")
+	IF obj = "" THEN
+		obj = PageGetStr("OBJ");
+	END
+	STRING sItem = _NCF_Def(obj, "ITEM");
+	TaskCall("NCFX_Interlocks_" + sItem, "");
+END
+
+//Interlock callback: opens the Interlocks Popup (called from specific interlock functions)
+FUNCTION NCF_Interlocks_Callback(
+	STRING obj,
+	STRING Desc1 = "",
+	STRING Tag1 = "",
+	STRING Check1 = "",
+	STRING Desc2 = "",
+	STRING Tag2 = "",
+	STRING Check2 = "",
+	STRING Desc3 = "",
+	STRING Tag3 = "",
+	STRING Check3 = "",
+	STRING Desc4 = "",
+	STRING Tag4 = "",
+	STRING Check4 = "",
+	STRING Desc5 = "",
+	STRING Tag5 = "",
+	STRING Check5 = "",
+	STRING Desc6 = "",
+	STRING Tag6 = "",
+	STRING Check6 = "",
+	STRING Desc7 = "",
+	STRING Tag7 = "",
+	STRING Check7 = "",
+	STRING Desc8 = "",
+	STRING Tag8 = "",
+	STRING Check8 = "",
+	STRING Desc9 = "",
+	STRING Tag9 = "",
+	STRING Check9 = "",
+	STRING Desc10 = "",
+	STRING Tag10 = "",
+	STRING Check10 = "",
+	STRING Desc11 = "",
+	STRING Tag11 = "",
+	STRING Check11 = "",
+	STRING Desc12 = "",
+	STRING Tag12 = "",
+	STRING Check12 = "",
+	STRING Desc13 = "",
+	STRING Tag13 = "",
+	STRING Check13 = "",
+	STRING Desc14 = "",
+	STRING Tag14 = "",
+	STRING Check14 = "",
+	STRING Desc15 = "",
+	STRING Tag15 = "",
+	STRING Check15 = "",
+	STRING Desc16 = "",
+	STRING Tag16 = "",
+	STRING Check16 = 0 
+)
+	STRING sTitle;
+	sTitle = obj + " - Interlocks";
+	
+	IF WndFind(sTitle) > 0 THEN
+		WinGoto(WinNumber(sTitle));
+		RETURN;
+	END
+
+	Ass(-2, "Tag1", Tag1, 0);
+	Ass(-2, "Tag2", Tag2, 0);
+	Ass(-2, "Tag3", Tag3, 0);
+	Ass(-2, "Tag4", Tag4, 0);
+	Ass(-2, "Tag5", Tag5, 0);
+	Ass(-2, "Tag6", Tag6, 0);
+	Ass(-2, "Tag7", Tag7, 0);
+	Ass(-2, "Tag8", Tag8, 0);
+	Ass(-2, "Tag9", Tag9, 0);
+	Ass(-2, "Tag10", Tag10, 0);
+	Ass(-2, "Tag11", Tag11, 0);
+	Ass(-2, "Tag12", Tag12, 0);
+	Ass(-2, "Tag13", Tag13, 0);
+	Ass(-2, "Tag14", Tag14, 0);
+	Ass(-2, "Tag15", Tag15, 0);
+	Ass(-2, "Tag16", Tag16, 0);
+	
+	_NCF_Window_Popup("NCF_ILK");
+	WinTitle(sTitle);
+
+	PageSetStr("I1", Desc1);
+	PageSetStr("I2", Desc2);
+	PageSetStr("I3", Desc3);
+	PageSetStr("I4", Desc4);
+	PageSetStr("I5", Desc5);
+	PageSetStr("I6", Desc6);
+	PageSetStr("I7", Desc7);
+	PageSetStr("I8", Desc8);
+	PageSetStr("I9", Desc9);
+	PageSetStr("I10", Desc10);
+	PageSetStr("I11", Desc11);
+	PageSetStr("I12", Desc12);
+	PageSetStr("I13", Desc13);
+	PageSetStr("I14", Desc14);
+	PageSetStr("I15", Desc15);
+	PageSetStr("I16", Desc16);
+	PageSetStr("Check1", Check1);	
+	PageSetStr("Check2", Check2);	
+	PageSetStr("Check3", Check3);	
+	PageSetStr("Check4", Check4);	
+	PageSetStr("Check5", Check5);	
+	PageSetStr("Check6", Check6);	
+	PageSetStr("Check7", Check7);	
+	PageSetStr("Check8", Check8);	
+	PageSetStr("Check9", Check9);	
+	PageSetStr("Check10", Check10);	
+	PageSetStr("Check11", Check11);	
+	PageSetStr("Check12", Check12);	
+	PageSetStr("Check13", Check13);	
+	PageSetStr("Check14", Check14);	
+	PageSetStr("Check15", Check15);	
+	PageSetStr("Check16", Check16);	
+END
+

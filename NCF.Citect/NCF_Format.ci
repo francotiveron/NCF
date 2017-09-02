@@ -1,0 +1,25 @@
+//Construct 4-byte unsigned integer formatted string from 2 (hi-lo) 2-byte integer components
+STRING FUNCTION NCF_Format_2IntToULong(INT hi, INT lo, REAL factor = 1.0)
+	STRING sRet = "???";
+	REAL rHi, rLo;
+	
+	IF hi >= 0 THEN rHi = hi; ELSE rHi = 32768.0 + (hi BITAND 32767); END
+	IF lo >= 0 THEN rLo = lo; ELSE rLo = 32768.0 + (lo BITAND 32767); END
+	sRet = (factor * (rHi * 65536.0 + rLo)):###########;
+	
+	RETURN sRet;
+END
+
+STRING FUNCTION NCF_Format_Seconds2MMSS(INT seconds)
+	STRING sRet = "???";
+	INT iMinutes, iSeconds;
+	
+	seconds = seconds MOD 3600;
+	iMinutes = seconds / 60;
+	ISeconds = seconds MOD 60;
+	
+	sRet = iMinutes:00 + ":" + iSeconds:00;
+	
+	RETURN sRet;
+END
+

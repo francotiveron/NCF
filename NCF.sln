@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCF.Excel.Ribbon", "NCF.Exc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCF.Excel.UI", "NCF.Excel.UI\NCF.Excel.UI.csproj", "{D2527DD1-E603-42FE-8FA7-DD5C25A61D4F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NCF.Citect", "NCF.Citect\NCF.Citect.vcxproj", "{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,16 @@ Global
 		{D2527DD1-E603-42FE-8FA7-DD5C25A61D4F}.Release|x64.Build.0 = Release|Any CPU
 		{D2527DD1-E603-42FE-8FA7-DD5C25A61D4F}.Release|x86.ActiveCfg = Release|Any CPU
 		{D2527DD1-E603-42FE-8FA7-DD5C25A61D4F}.Release|x86.Build.0 = Release|Any CPU
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Debug|x64.ActiveCfg = Debug|x64
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Debug|x64.Build.0 = Debug|x64
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Debug|x86.ActiveCfg = Debug|Win32
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Debug|x86.Build.0 = Debug|Win32
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Release|x64.ActiveCfg = Release|x64
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Release|x64.Build.0 = Release|x64
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Release|x86.ActiveCfg = Release|Win32
+		{DCAB58E7-8A29-4A9A-9D46-1C21A335E1B2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

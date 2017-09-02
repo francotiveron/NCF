@@ -1,0 +1,37 @@
+//Open-Close Popup
+INT FUNCTION _NCF_Window_Popup(STRING page = "")
+	INT iRet = 0;
+	INT x, y;
+	
+	DspGetMouse(x, y);
+	
+	IF page = "" THEN
+		iRet = WinFree();
+	ELSE
+		!iRet = WinNewAt(page, x, y, 1+4+32+64+1024+16384+32768);
+		iRet = CSV_MM_WinNewAt(page, x, y, 1+4+32+64+128+256+1024+16384+32768);
+ 		_NCF_Win32_NormalizeSystemMenu();
+		_NCF_Window_Resize();
+	END
+	RETURN iRet;
+END
+
+//Resize extensible popup
+FUNCTION _NCF_Window_Resize(STRING kind = "NORMAL")
+	STRING sWidth, sHeight;
+	INT iWidth, iHeight;
+	IF kind = "NORMAL" OR PageGetStr("EXTSTATUS") = kind THEN
+		sWidth = DspGetEnv("WIDTH_NORMAL");
+		sHeight = DspGetEnv("HEIGHT_NORMAL");
+	    PageSetStr("EXTSTATUS", "NORMAL");
+	ELSE
+		sWidth = DspGetEnv("WIDTH_" + kind);
+		sHeight = DspGetEnv("HEIGHT_" + kind);
+	    PageSetStr("EXTSTATUS", kind);
+	END
+	iWidth = StrToInt(sWidth);
+	iHeight = StrToInt(sHeight);
+	IF iWidth > 50 AND iHeight > 50 THEN
+		WinSize(iWidth  + 2 * WndInfo(5), iHeight + WndInfo(4) + WndInfo(5));
+	END
+END

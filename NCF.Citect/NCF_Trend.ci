@@ -1,0 +1,6 @@
+FUNCTION _NCF_Trend_SetPen(INT an, INT pen, STRING tag, REAL scale0 = 0.0, REAL scale100 = 100.0)
+	TrnSetPen(an, pen, tag);
+	TrnSetScale(an, pen, 0, scale0);
+	TrnSetScale(an, pen, 100, scale100);
+END
+

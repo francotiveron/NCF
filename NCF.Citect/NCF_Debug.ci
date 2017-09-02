@@ -1,0 +1,32 @@
+FUNCTION _NCF_Debug_Log(STRING msg)
+	TraceMsg(msg);
+END
+
+FUNCTION _NCF_Debug_Test1()
+	INT hNCFCitPushAlarm = _NCF_DLL_Open("C:\Project\NCF\NCFCit\Debug\NCFCit.exe", "NCFCitPushAlarm", "J");
+
+	IF hNCFCitPushAlarm < 0 THEN
+		_NCF_Debug_Log("Can't Open NCFCit");
+		RETURN;
+	END
+	
+	STRING sRet;	
+	sRet = _NCF_DLL_Call(hNCFCitPushAlarm, "");
+	_NCF_DLL_Close(hNCFCitPushAlarm);
+END
+
+FUNCTION _NCF_Debug_Test2()
+	INT hAdd, hTest;
+	STRING sResult;
+	
+	hTest = _NCF_DLL_Open("C:\Project\NCF\CitLib\bin\x86\Debug\CitLib.DLL", "test", "CC");
+	sResult = DLLCall(hAdd, "cabbage");
+	Message("Title","Result: " + sResult,0);
+	DLLClose(hTest);
+	
+	hAdd = _NCF_DLL_Open("C:\Project\NCF\CitLib\bin\x86\Debug\CitLib.DLL", "add", "JJJ");
+	sResult = DLLCall(hAdd, "1,2");
+	DLLClose(hAdd);
+	Message("Title","Result: " + sResult,0);
+
+END

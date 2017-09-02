@@ -1,0 +1,38 @@
+STRING NCFVersion = "0.0, 25/05/2017";
+STRING FUNCTION NCF(
+	STRING sReq,
+	STRING sP1 = "",
+	STRING sP2 = "",
+	STRING sP3 = "",
+	STRING sP4 = ""
+)
+	STRING retVal = "";
+	SELECT CASE StrUpper(sReq)
+		CASE "VERSION" retVal = NCFVersion;
+		CASE "INPUT_TOUCH" _NCF_Faceplate(sP1, sP2);
+		CASE "REAL_ENTRY" NCF_Entry("REAL", sP1, sP2, sP3);
+		CASE "BYTE100_ENTRY" NCF_Entry("BYTE100", sP1, sP2, sP3, sP4);
+		CASE "INIT_FACEPLATE_TRENDS" _NCF_Faceplate_Trend(sP1);
+		CASE "RESIZE" _NCF_Window_Resize(sP1);
+		CASE "ANALYST_POPUP" _NCF_Analyst_Popup(sP1);
+		CASE "SHOW_INTERLOCKS" _NCF_Interlocks(sP1);
+		CASE "POPUP" _NCF_Popup(sP1, sP2);
+	END SELECT
+	RETURN retVal;
+END
+
+
+
+PRIVATE FUNCTION _NCF_Popup(STRING sPage, STRING sTitle = "")
+	IF sTitle = "" THEN sTitle = sPage; END
+
+	IF WndFind(sTitle) > 0 THEN //activate if already open
+//		IF 0 = WinGoto(WinNumber(sTitle)) THEN
+//			RETURN;
+//		END
+		WinGoto(WinNumber(sTitle));
+	END
+
+	_NCF_Window_Popup(sPage);
+	WinTitle(sTitle);
+END
