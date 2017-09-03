@@ -68,6 +68,7 @@
     <Content Include="Readme.txt" />
     <None Include="Deploy\deploy.cmd" />
     <None Include="Deploy\Deploy.sql" />
+    <None Include="Deploy\schema.sql" />
     <None Include="Test\RunTest.sql" />
     <None Include="Test\Script.fsx" />
     <None Include="Test\StopSqlJob.ps1" />

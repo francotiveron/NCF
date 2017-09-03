@@ -98,7 +98,6 @@
     <Content Include="packages.config" />
     <Compile Include="Sender.fs" />
     <Compile Include="Exports.fs" />
-    <None Include="deploy.cmd" />
     <None Include="Script.fsx" />
     <Content Include="Readme.txt" />
   </ItemGroup>
