@@ -1,11 +1,11 @@
 (function()
 {
  "use strict";
- var Global,NCF,MES,Client,WebSharper,UI,Next,Var,Submitter,View,Remoting,AjaxRemotingProvider,Concurrency,Doc,AttrProxy;
+ var Global,NCF,BPP,Client,WebSharper,UI,Next,Var,Submitter,View,Remoting,AjaxRemotingProvider,Concurrency,Doc,AttrProxy;
  Global=window;
  NCF=Global.NCF=Global.NCF||{};
- MES=NCF.MES=NCF.MES||{};
- Client=MES.Client=MES.Client||{};
+ BPP=NCF.BPP=NCF.BPP||{};
+ Client=BPP.Client=BPP.Client||{};
  WebSharper=Global.WebSharper;
  UI=WebSharper&&WebSharper.UI;
  Next=UI&&UI.Next;
@@ -25,7 +25,7 @@
   vReversed=View.MapAsync(function(a)
   {
    var b;
-   return a!=null&&a.$==1?(new AjaxRemotingProvider.New()).Async("NCF.MES:NCF.MES.Server.DoSomething:-1287498065",[a.$0]):(b=null,Concurrency.Delay(function()
+   return a!=null&&a.$==1?(new AjaxRemotingProvider.New()).Async("NCF.BPP:NCF.BPP.Server.DoSomething:-1287498065",[a.$0]):(b=null,Concurrency.Delay(function()
    {
     return Concurrency.Return("");
    }));

@@ -1,4 +1,4 @@
-namespace NCF.MES
+namespace NCF.BPP
 
 open WebSharper
 open WebSharper.Sitelets
@@ -31,6 +31,7 @@ module Templating =
                 .Title(title)
                 .MenuBar(MenuBar ctx action)
                 .Body(body)
+                .EmbedToken("Cortos")
                 .Doc()
         )
 

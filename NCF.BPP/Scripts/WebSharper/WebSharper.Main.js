@@ -498,12 +498,12 @@
   SC$1.$cctor();
   SC$1.EndPoint=$1;
  };
- SC$1.$cctor=Runtime.Cctor(function()
+ SC$1.$cctor=function()
  {
+  SC$1.$cctor=Global.ignore;
   SC$1.EndPoint="?";
   SC$1.AjaxProvider=new XhrProvider.New();
-  SC$1.$cctor=Global.ignore;
- });
+ };
  Operators.charRange=function(min,max)
  {
   var minv,count;
@@ -1240,8 +1240,9 @@
   SC$2.$cctor();
   return SC$2.noneCT;
  };
- SC$2.$cctor=Runtime.Cctor(function()
+ SC$2.$cctor=function()
  {
+  SC$2.$cctor=Global.ignore;
   SC$2.noneCT={
    c:false,
    r:[]
@@ -1256,8 +1257,7 @@
     $0:c.ct
    });
   };
-  SC$2.$cctor=Global.ignore;
- });
+ };
  T=Enumerator.T=Runtime.Class({
   Dispose:function()
   {

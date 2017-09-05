@@ -1,4 +1,4 @@
-namespace NCF.MES
+namespace NCF.BPP
 
 type Global() =
     inherit System.Web.HttpApplication()
