@@ -19,9 +19,9 @@ let private saveEvent (e:CitectAlarmEvent) =
             Desc = e.desc,
             Location = "cmoc/npm/" + e.zone + "/" + (string e.area),
             Priority = e.priority,
-            TimeOn = e.timeOn, 
+            TimeOn = e.timeOn.Value, 
             TimeOff = e.timeOff.Value,
-            Duration = (float32 (e.timeOff.Value - e.timeOn).TotalSeconds)
+            Duration = (float32 (e.timeOff.Value - e.timeOn.Value).TotalSeconds)
             )
     db.NCFEvent.InsertOnSubmit(r)
 
@@ -29,7 +29,8 @@ let private saveEvent (e:CitectAlarmEvent) =
 let manage (e:CitectAlarmEvent) (logger: string->unit) = 
     match e.state, e.time, e.timeOn, e.timeOff with
     | On, _, _, _ -> ()
-    | NotOn, t, tOn, Some tOff when t >= tOff && tOff > tOn -> 
+    | _, _, None, _ -> ()
+    | NotOn, t, Some tOn, Some tOff when t >= tOff && tOff > tOn -> 
         if query {for event in db.NCFEvent do
                   select (event.Tag, event.TimeOn, event.TimeOff)
                   contains (e.tag, tOn, tOff)}

@@ -14,7 +14,8 @@ type CitectAlarmEvent = {
     area : int16
     priority : byte
     time : DateTime
-    timeOn : DateTime
+    //timeOn : DateTime
+    timeOn : DateTime option
     timeOff : DateTime option
     timeAck : DateTime option
     }
@@ -34,7 +35,7 @@ let msg2record (citectMessage : string) : Result<CitectAlarmEvent, string> =
     | [|zone; tag; name; desc; state; area; priority; date; time; dateOn; timeOn; dateOff; timeOff; dateAck; timeAck|] when 
             not (String.IsNullOrWhiteSpace(tag))
             && (match (parsedt time date) with | Some dt -> t <- dt; true | None -> false)
-            && (match (parsedt timeOn dateOn) with | Some dt -> tOn <- dt; true | None -> false)
+            //&& (match (parsedt timeOn dateOn) with | Some dt -> tOn <- dt; true | None -> false)
         -> Ok {
             zone= zone
             tag = tag
@@ -44,7 +45,8 @@ let msg2record (citectMessage : string) : Result<CitectAlarmEvent, string> =
             area = System.Int16.Parse(area);
             priority = System.Byte.Parse(priority)
             time = t
-            timeOn = tOn
+            //timeOn = tOn
+            timeOn = parsedt timeOn dateOn
             timeOff = parsedt timeOff dateOff
             timeAck = parsedt timeAck dateAck}
     | _ -> Error "Invalid Format"
