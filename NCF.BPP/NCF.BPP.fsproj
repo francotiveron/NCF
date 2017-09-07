@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>daba42fc-6d40-42f6-ab59-f337d9abb7ca</ProjectGuid>
+    <ProjectGuid>a4a93ab0-229b-4c19-9e73-7a4abe8103f7</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NCF.BPP</RootNamespace>
     <AssemblyName>NCF.BPP</AssemblyName>
@@ -104,7 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="PowerBI.fs" />
     <Compile Include="Remoting.fs" />
     <Compile Include="Client.fs" />
     <Compile Include="Main.fs" />
@@ -114,6 +113,13 @@
     <Compile Include="Global.asax.fs" />
     <Content Include="Setup.fsx" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NCF.BPP.PowerBI.JSExtension\NCF.BPP.PowerBI.JSExtension.fsproj">
+      <Name>NCF.BPP.PowerBI.JSExtension</Name>
+      <Project>{77961a91-3c04-41ae-9aa7-3df0b4e445c1}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Target Name="IncludeContent" BeforeTargets="Compile">
     <ItemGroup>
@@ -150,7 +156,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>53398</DevelopmentServerPort>
+          <DevelopmentServerPort>56107</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:53398/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

@@ -5,15 +5,17 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>3fbe46c1-5e14-4839-93d9-c8dba2cb3cba</ProjectGuid>
+    <ProjectGuid>77961a91-3c04-41ae-9aa7-3df0b4e445c1</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>NCF.AlarmHistory</RootNamespace>
-    <AssemblyName>NCF.AlarmHistory</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>NCF.BPP.PowerBI.JSExtension</RootNamespace>
+    <AssemblyName>NCF.BPP.PowerBI.JSExtension</AssemblyName>
+    <WebSharperProject>InterfaceGenerator</WebSharperProject>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>NCF.AlarmHistory</Name>
-    <TargetFrameworkProfile />
+    <Name>NCF.BPP.PowerBI.JSExtension</Name>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,47 +52,60 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>(robocopy $(TargetDir) C:\NCF /MIR) ^&amp; IF %ERRORLEVEL% LEQ 3 exit 0</PostBuildEvent>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CitectAlarmEvent.fs" />
-    <Compile Include="DB.fs" />
-    <Compile Include="Log.fs" />
-    <Compile Include="Processor.fs" />
-    <Compile Include="Exports.fs" />
-    <Content Include="Readme.txt" />
-    <None Include="Deploy\deploy.cmd" />
-    <None Include="Deploy\Deploy.sql" />
-    <None Include="Deploy\schema.sql" />
-    <None Include="Test\RunTest.sql" />
-    <None Include="Test\Script.fsx" />
-    <None Include="Test\StopSqlJob.ps1" />
+    <Compile Include="Main.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Data.TypeProviders">
-      <HintPath>..\packages\FSharp.Data.TypeProviders.5.0.0.2\lib\net40\FSharp.Data.TypeProviders.dll</HintPath>
-    </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Messaging" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ValueTuple">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Collections">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Control">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Control.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Core">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Core.JavaScript">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Core.JavaScript.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.InterfaceGenerator">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.InterfaceGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.JavaScript">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.JavaScript.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.JQuery">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.JQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Main">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Main.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Sitelets">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Sitelets.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.Web">
+      <HintPath>..\packages\Zafir.4.0.188.91-beta10\lib\net40\WebSharper.Web.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <Import Project="..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets" Condition="Exists('..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

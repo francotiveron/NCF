@@ -31,7 +31,6 @@ module Templating =
                 .Title(title)
                 .MenuBar(MenuBar ctx action)
                 .Body(body)
-                .EmbedToken("Cortos")
                 .Doc()
         )
 

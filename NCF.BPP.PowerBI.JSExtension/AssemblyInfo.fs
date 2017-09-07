@@ -1,4 +1,4 @@
-﻿namespace NCF.BPP.AssemblyInfo
+﻿namespace NCF.BPP.PowerBI.JSExtension.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("NCF.BPP")>]
+[<assembly: AssemblyTitle("NCF.BPP.PowerBI.JSExtension")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("NCF.BPP")>]
+[<assembly: AssemblyProduct("NCF.BPP.PowerBI.JSExtension")>]
 [<assembly: AssemblyCopyright("Copyright ©  2017")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
@@ -22,7 +22,7 @@ open System.Runtime.InteropServices
 [<assembly: ComVisible(false)>]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[<assembly: Guid("a4a93ab0-229b-4c19-9e73-7a4abe8103f7")>]
+[<assembly: Guid("77961a91-3c04-41ae-9aa7-3df0b4e445c1")>]
 
 // Version information for an assembly consists of the following four values:
 // 

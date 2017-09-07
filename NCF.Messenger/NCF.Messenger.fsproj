@@ -14,7 +14,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>NCF.Messenger</Name>
     <TargetFrameworkProfile />
-    <DllExportNamespace>NCF.Messenger.DllExport</DllExportNamespace>
+    <DllExportNamespace>NCF.Messenger</DllExportNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,11 +95,11 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Content Include="packages.config" />
     <Compile Include="Sender.fs" />
     <Compile Include="Exports.fs" />
     <None Include="Script.fsx" />
     <Content Include="Readme.txt" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DllExport">
@@ -114,6 +114,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\portable-net40+sl4+win8+wp8\System.ValueTuple.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets" Condition="Exists('../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
