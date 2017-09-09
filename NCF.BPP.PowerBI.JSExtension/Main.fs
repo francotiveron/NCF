@@ -6,7 +6,7 @@ open WebSharper.InterfaceGenerator
 
 module Definition =
 
-    let R1 = Resource "PowerBIResource" "powerbi.js"
+    let R1 = Resource "PowerBIResource" "scripts/powerbi.js"
 
     let PB = Class "powerbi"
 
@@ -24,6 +24,7 @@ module Definition =
             Required = []
             Optional =
                 [
+                    "tokenType", T<int>
                     "accessToken" , T<string>
                     "embedUrl", T<string>
                     "type", T<string>
@@ -40,12 +41,12 @@ module Definition =
 
     let Assembly =
         Assembly [
-            Namespace "WebSharper.Community.PowerBI" [
+            Namespace "NCF.BPP.PowerBI.JSExtension" [
                 PowerBIConfig
                 PowerBISettings
                 PowerBIClass
             ]
-            Namespace "WebSharper.Community.PowerBI.Resources" [                
+            Namespace "NCF.BPP.PowerBI.JSExtension.Resources" [                
                 R1
                 |> fun r -> r.AssemblyWide()
             ] 

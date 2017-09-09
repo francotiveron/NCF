@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>NPP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #reportContainer {
+            height: 100%; 
+        }
+    </style>
+    <script src="https://npmcdn.com/es6-promise@3.2.1"></script>
+<!--
+    <link rel="stylesheet" type="text/css" href="~/Content/style/style.css">
+-->
+    <script src="scripts/powerbi.js"></script>
+</head>
+<body>
+    <div id="reportContainer"></div>
+    <script>
+        function init(report) {
+            var models = window['powerbi-client'].models;
+
+            var config = {
+                type: 'report',
+                tokenType: models.TokenType.Embed,
+                accessToken: report.accessToken,
+                embedUrl: report.embedUrl,
+                id: report.reportId,
+                permissions: models.Permissions.All,
+                settings: {
+                    filterPaneEnabled: true,
+                    navContentPaneEnabled: true
+                }
+            };
+
+            var reportContainer = document.getElementById('reportContainer');
+            var report = powerbi.embed(reportContainer, config);    
+            report.fullscreen();
+       }
+    </script>
+</body>
+</html>

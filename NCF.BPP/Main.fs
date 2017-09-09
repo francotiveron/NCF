@@ -4,6 +4,8 @@ open WebSharper
 open WebSharper.Sitelets
 open WebSharper.UI.Next
 open WebSharper.UI.Next.Server
+open Reports
+open System.IO
 
 type EndPoint =
     | [<EndPoint "/">] Home
@@ -25,34 +27,44 @@ module Templating =
             li ["About" => EndPoint.About]
         ]
 
-    let Main ctx action (title: string) (body: Doc list) =
-        Content.Page(
-            MainTemplate()
+    let doc ctx action (report:ReportType) (title: string) (body: Doc list) = 
+        MainTemplate()
                 .Title(title)
                 .MenuBar(MenuBar ctx action)
                 .Body(body)
+                .AccessToken(report.AccessToken)
+                .EmbedUrl(report.EmbedUrl)
+                .ReportId(report.ReportId)
                 .Doc()
-        )
-
+    
+ 
+    let Main ctx action report (title: string) (body: Doc list) =
+        let doc = doc ctx action report title body
+        Content.Page(doc)
+ 
 module Site =
     open WebSharper.UI.Next.Html
-
-    let HomePage ctx =
-        Templating.Main ctx EndPoint.Home "Home" [
+    let HomePage (ctx: Context<EndPoint>) =
+        let path = sprintf "%sRep.html" ctx.RootFolder
+        let report = ReportTest()
+        //let doc2 = div [text "ciccio"]
+        let html = File.ReadAllText(path)
+        Templating.Main ctx EndPoint.Home report "Home" [
             h1 [text "Say Hi to the server!"]
-            div [client <@ Client.Main() @>]
+            divAttr [attr.id "embedReportHtml" (*; attr.hidden "true"*)] [text html]
+            div [client <@ Client.Main(report) @>]
         ]
 
-    let AboutPage ctx =
-        Templating.Main ctx EndPoint.About "About" [
-            h1 [text "About"]
-            p [text "This is a template WebSharper client-server application."]
-        ]
+    //let AboutPage ctx =
+    //    Templating.Main ctx EndPoint.About () "About" [
+    //        h1 [text "About"]
+    //        p [text "This is a template WebSharper client-server application."]
+    //    ]
 
     [<Website>]
     let Main =
         Application.MultiPage (fun ctx endpoint ->
             match endpoint with
             | EndPoint.Home -> HomePage ctx
-            | EndPoint.About -> AboutPage ctx
+            | EndPoint.About -> HomePage ctx
         )
