@@ -4,7 +4,7 @@ open WebSharper
 open WebSharper.Sitelets
 open WebSharper.UI.Next
 open WebSharper.UI.Next.Server
-open Reports
+open PowerBI
 open System.IO
 
 type EndPoint =
@@ -27,14 +27,12 @@ module Templating =
             li ["About" => EndPoint.About]
         ]
 
-    let doc ctx action (report:ReportType) (title: string) (body: Doc list) = 
+    let doc ctx action (workspaces:Workspace seq) (title: string) (body: Doc list) = 
         MainTemplate()
-                .Title(title)
-                .MenuBar(MenuBar ctx action)
                 .Body(body)
-                .AccessToken(report.AccessToken)
-                .EmbedUrl(report.EmbedUrl)
-                .ReportId(report.ReportId)
+                //.AccessToken(report.AccessToken)
+                //.EmbedUrl(report.EmbedUrl)
+                //.ReportId(report.ReportId)
                 .Doc()
     
  
@@ -44,15 +42,15 @@ module Templating =
  
 module Site =
     open WebSharper.UI.Next.Html
+    open PowerBI
+
     let HomePage (ctx: Context<EndPoint>) =
         let path = sprintf "%sRep.html" ctx.RootFolder
-        let report = ReportTest()
-        //let doc2 = div [text "ciccio"]
+        let workspaces = getWorkspaces()
         let html = File.ReadAllText(path)
-        Templating.Main ctx EndPoint.Home report "Home" [
-            h1 [text "Say Hi to the server!"]
-            divAttr [attr.id "embedReportHtml" (*; attr.hidden "true"*)] [text html]
-            div [client <@ Client.Main(report) @>]
+        Templating.Main ctx EndPoint.Home workspaces "Home" [
+            divAttr [attr.id "embedReportHtml"; attr.hidden "true"] [text html]
+            div [client <@ Client.Main(workspaces) @>]
         ]
 
     //let AboutPage ctx =

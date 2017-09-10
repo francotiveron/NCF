@@ -10,6 +10,9 @@ module Definition =
 
     let PB = Class "powerbi"
 
+    let WI = Class "wi"
+             |=> Inherits T<Window>
+
     let PowerBISettings =
         Pattern.Config "PowerBISettings" {
             Required = []
@@ -39,12 +42,16 @@ module Definition =
                 "embed" => T<Dom.Element>?target * PowerBIConfig?config ^-> T<unit>
             ]
 
+    let WIClass = 
+            WI |+> Instance [ "init" => PowerBIConfig?config ^-> T<unit>]
+
     let Assembly =
         Assembly [
             Namespace "NCF.BPP.PowerBI.JSExtension" [
                 PowerBIConfig
                 PowerBISettings
                 PowerBIClass
+                WIClass
             ]
             Namespace "NCF.BPP.PowerBI.JSExtension.Resources" [                
                 R1

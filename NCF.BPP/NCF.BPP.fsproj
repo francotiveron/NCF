@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="PowerBI.fs" />
     <Compile Include="ReportsOrg.fs" />
     <Compile Include="Reports.fs" />
     <Compile Include="Remoting.fs" />
@@ -149,7 +150,9 @@
     <Content Include="scripts\powerbi.js.map" />
     <Content Include="scripts\powerbi.js" />
     <Content Include="scripts\bpp.js" />
+    <Content Include="scripts\WebSharper\NCF.BPP.js" />
     <None Include="packages.config" />
+    <Content Include="Copy of Main.html" />
   </ItemGroup>
   <Target Name="IncludeContent" BeforeTargets="Compile">
     <ItemGroup>
@@ -221,9 +224,6 @@
   </ProjectExtensions>
   <Import Project="..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets" Condition="Exists('..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
     <Error Condition="!Exists('..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Zafir.FSharp.4.0.188.91-beta10\build\Zafir.FSharp.targets'))" />
     <Error Condition="!Exists('..\packages\Zafir.UI.Next.4.0.169.79-beta10\build\Zafir.UI.Next.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Zafir.UI.Next.4.0.169.79-beta10\build\Zafir.UI.Next.targets'))" />
   </Target>

@@ -1,20 +1,45 @@
 ﻿namespace NCF.BPP
 
 open WebSharper
-open WebSharper.JavaScript
 open WebSharper.UI.Next
 open WebSharper.UI.Next.Client
 open WebSharper.UI.Next.Html
 open NCF.BPP.PowerBI.JSExtension
-open Reports
+open WebSharper.JavaScript
+open WebSharper.JQuery
+open PowerBI
 
 [<JavaScript>]
 module Client =
-    let Main (report:ReportType) =
+
+    //let fun1 (report) =
+    //    let powerbi_settings = PowerBISettings(FilterPaneEnabled = true)
+        
+        //let powerbi_conf = 
+        //    PowerBIConfig(
+        //        TokenType = 1,
+        //        AccessToken = report.AccessToken, 
+        //        Type = "report", 
+        //        EmbedUrl = report.EmbedUrl,
+        //        Id = report.ReportId,
+        //        Settings = powerbi_settings)
+
+        //let h = JQuery("#embedReportHtml").Text()
+        //let w = JS.Window.Open() :?> Wi
+        //w.Document.Write(h)
+        //w.Init(powerbi_conf)
+
+
+    let private renderWorkspace (w:Workspace) : Doc list = 
+        divAttr [] [text w.name]
+
+    let Main (workspaces:Workspace seq) =
+        workspaces |> Seq.map renderWorkspace |> Doc.Concat
+
+(*
         let powerbi_target = divAttr [attr.style "height:720px"] []
-
+        
         //let html = Doc.Element "" [] [doc] |> (fun elt -> elt.Html)
-
         let powerbi_settings = PowerBISettings(FilterPaneEnabled = true)
         
         let powerbi_conf = 
@@ -36,6 +61,7 @@ module Client =
 
             powerbi_target
         ]
+*)
 (*
         open System.Reflection.Emit
 
