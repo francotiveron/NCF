@@ -10,14 +10,15 @@ open Microsoft.IdentityModel.Clients.ActiveDirectory
 
 type Report = {
     name : string
-    id: string
+    //id: string
     embedUrl : string
+    ``public`` : bool
     token : string
     }
 
 type Workspace = {
     name : string
-    id : string
+    //id : string
     reports : Report list
     }
 
@@ -30,21 +31,26 @@ let private powerBiClient =
 
 let private getEmbedToken (pbic:PowerBIClient) gId rId =
     let generateTokenRequestParameters = new GenerateTokenRequest(accessLevel = "view")
-    pbic.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters).Token
+    try pbic.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters).Token, true
+    with x -> x.Message, false
+
+let private buildReport (pbic:PowerBIClient) (gId:string) (r:Models.Report) =
+    let t, p = getEmbedToken pbic gId r.Id
+    {name = r.Name; embedUrl = r.EmbedUrl; ``public`` = p; token = t}
 
 let private getReports (pbic:PowerBIClient) (grp:Models.Group) = 
     pbic.Reports.GetReportsInGroup(grp.Id).Value
-    |> Seq.map (fun r -> {name = r.Name; id = r.Id; embedUrl = r.EmbedUrl; token = getEmbedToken pbic grp.Id r.Id})
+    |> Seq.map (buildReport pbic grp.Id)
     |> Seq.toList
 
 let private getGroups (pbic:PowerBIClient) = 
     pbic.Groups.GetGroups().Value
-    |> Seq.map (fun g -> {name = g.Name; id = g.Id; reports = getReports pbic g })
+    |> Seq.map (fun g -> {name = g.Name; reports = getReports pbic g })
 
 let getWorkspaces () = 
     async {
         return powerBiClient |> getGroups
-    } |> Async.RunSynchronously
+    } |> Async.RunSynchronously |> Seq.toList
 
     //let! groups = getGroupsAsync
     //let getWorkspace (group:Group) =

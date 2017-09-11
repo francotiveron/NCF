@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,NCF,BPP,Client,WebSharper,UI,Next,Doc,AttrProxy;
+ var Global,NCF,BPP,Client,WebSharper,UI,Next,Doc,AttrProxy,Seq;
  Global=window;
  NCF=Global.NCF=Global.NCF||{};
  BPP=NCF.BPP=NCF.BPP||{};
@@ -11,21 +11,37 @@
  Next=UI&&UI.Next;
  Doc=Next&&Next.Doc;
  AttrProxy=Next&&Next.AttrProxy;
- Client.Main=function(report)
+ Seq=WebSharper&&WebSharper.Seq;
+ Client.Main=function(workspaces)
  {
-  return Doc.Element("div",[],[Doc.Button("GO",[AttrProxy.Create("class","btn btn-primary")],function()
-  {
-   Client.fun1(report);
-  })]);
+  return Doc.Element("div",[AttrProxy.Create("class","container")],[Doc.Element("div",[AttrProxy.Create("class","panel-group"),AttrProxy.Create("id","accordion")],[Client.renderWorkspaces(workspaces)])]);
  };
- Client.fun1=function(report)
+ Client.renderWorkspaces=function(workspaces)
  {
-  var powerbi_settings,r,powerbi_conf,r$1,h,w;
-  powerbi_settings=(r={},r.filterPaneEnabled=true,r);
-  powerbi_conf=(r$1={},r$1.tokenType=1,r$1.accessToken=report.AccessToken,r$1.type="report",r$1.embedUrl=report.EmbedUrl,r$1.id=report.ReportId,r$1.settings=powerbi_settings,r$1);
-  h=Global.jQuery("#embedReportHtml").text();
-  w=Global.open();
-  w.document.write(h);
-  w.init(powerbi_conf);
+  return Doc.Concat(Seq.mapi(Client.renderWorkspace,workspaces));
+ };
+ Client.renderWorkspace=function(i,w)
+ {
+  return Doc.Element("div",[AttrProxy.Create("class","panel panel-default")],[Doc.Element("div",[AttrProxy.Create("class","panel-heading")],[Doc.Element("h4",[AttrProxy.Create("class","panel-title")],[Doc.Element("a",[AttrProxy.Create("data-"+"toggle","collapse"),AttrProxy.Create("data-"+"parent","#accordion"),AttrProxy.Create("href",(function($1)
+  {
+   return function($2)
+   {
+    return $1("#collapse"+Global.String($2));
+   };
+  }(Global.id))(i+1))],[Doc.TextNode(w.name)])])]),Doc.Element("div",[AttrProxy.Create("class","panel-collapse collapse"),AttrProxy.Create("id",(function($1)
+  {
+   return function($2)
+   {
+    return $1("collapse"+Global.String($2));
+   };
+  }(Global.id))(i+1))],[Doc.Element("div",[AttrProxy.Create("class","panel-body")],[Client.renderReports(w.reports)])])]);
+ };
+ Client.renderReports=function(rs)
+ {
+  return Doc.Concat(Seq.map(Client.renderReport,rs));
+ };
+ Client.renderReport=function(r)
+ {
+  return Doc.Element("div",[],[r["public"]?Doc.Element("a",[],[Doc.TextNode(r.name)]):Doc.Element("p",[],[Doc.TextNode(r.name)])]);
  };
 }());

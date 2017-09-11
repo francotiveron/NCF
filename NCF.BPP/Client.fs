@@ -11,7 +11,6 @@ open PowerBI
 
 [<JavaScript>]
 module Client =
-
     //let fun1 (report) =
     //    let powerbi_settings = PowerBISettings(FilterPaneEnabled = true)
         
@@ -29,12 +28,48 @@ module Client =
         //w.Document.Write(h)
         //w.Init(powerbi_conf)
 
+    let private renderReport (r:Report) : Doc =
+        div [
+            (if r.``public`` then
+                aAttr [] [text r.name]
+                else p [text r.name])
+            ]
+            :> Doc
 
-    let private renderWorkspace (w:Workspace) : Doc list = 
-        divAttr [] [text w.name]
+    let private renderReports (rs:Report list) = 
+        rs |> Seq.map renderReport |> Doc.Concat
 
-    let Main (workspaces:Workspace seq) =
-        workspaces |> Seq.map renderWorkspace |> Doc.Concat
+    let private renderWorkspace i (w:Workspace) : Doc = 
+        divAttr 
+            [attr.``class`` "panel panel-default"]
+            [divAttr 
+                [attr.``class`` "panel-heading"]
+                [h4Attr
+                    [attr.``class`` "panel-title"]
+                    [aAttr
+                        [attr.``data-`` "toggle" "collapse"; attr.``data-`` "parent" "#accordion"; attr.href (sprintf "#collapse%d" (i + 1))]
+                        [text w.name]
+                    ]
+                ]
+            ;divAttr
+                [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
+                [divAttr
+                    [attr.``class`` "panel-body"]
+                    [w.reports |> renderReports]
+                ]
+            ]
+            :> Doc
+
+    let private renderWorkspaces (workspaces:Workspace list) =
+        workspaces |> Seq.mapi renderWorkspace |> Doc.Concat
+
+    let Main (workspaces:Workspace list) =
+        divAttr 
+            [attr.``class`` "container"]
+            [divAttr 
+                [attr.``class`` "panel-group"; attr.id "accordion"]
+                [workspaces |> renderWorkspaces]
+            ]
 
 (*
         let powerbi_target = divAttr [attr.style "height:720px"] []
