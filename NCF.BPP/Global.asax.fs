@@ -3,5 +3,5 @@ namespace NCF.BPP
 type Global() =
     inherit System.Web.HttpApplication()
 
-    member g.Application_Start(sender: obj, args: System.EventArgs) =
+    member app.Application_Start(sender: obj, args: System.EventArgs) =
         ()

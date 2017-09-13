@@ -11,6 +11,28 @@ open PowerBI
 
 [<JavaScript>]
 module Client =
+
+    type ReportAccess = 
+        | Unknown
+        | Forbidden
+        | Embeddable of string
+
+    type Report = {
+        name : string
+        id: string
+        groupId: string
+        embedUrl : string
+        access : ReportAccess
+        }
+
+    type Workspace = {
+        name : string
+        id : string
+        reports : Map<string, Report>
+        }
+
+    type Workspaces = Map<string, Workspace>
+
     //let fun1 (report) =
     //    let powerbi_settings = PowerBISettings(FilterPaneEnabled = true)
         
@@ -28,16 +50,21 @@ module Client =
         //w.Document.Write(h)
         //w.Init(powerbi_conf)
 
+    //let private renderReport (r:Report) : Doc =
+    //    div [
+    //        (if r.``public`` then
+    //            aAttr [] [text r.name]
+    //            else p [text r.name])
+    //        ]
+    //        :> Doc
     let private renderReport (r:Report) : Doc =
-        div [
-            (if r.``public`` then
-                aAttr [] [text r.name]
-                else p [text r.name])
-            ]
-            :> Doc
+        div [text r.name] :> Doc
 
-    let private renderReports (rs:Report list) = 
-        rs |> Seq.map renderReport |> Doc.Concat
+    let private renderReports (reports:Map<string, Report>) = 
+        reports 
+        |> Map.toSeq
+        |> Seq.map (fun (_, r) -> renderReport r)
+        |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
         divAttr 
@@ -60,10 +87,13 @@ module Client =
             ]
             :> Doc
 
-    let private renderWorkspaces (workspaces:Workspace list) =
-        workspaces |> Seq.mapi renderWorkspace |> Doc.Concat
+    let private renderWorkspaces (workspaces:Workspaces) =
+        workspaces 
+        |> Map.toSeq
+        |> Seq.mapi (fun i (_, w) -> renderWorkspace i w)
+        |> Doc.Concat
 
-    let Main (workspaces:Workspace list) =
+    let Main (workspaces:Workspaces) =
         divAttr 
             [attr.``class`` "container"]
             [divAttr 
