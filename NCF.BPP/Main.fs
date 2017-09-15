@@ -12,35 +12,23 @@ type EndPoint =
 
 module FrontEnd =
     open WebSharper.UI.Next.Html
+    open State
 
-    type ReportAccess = 
-        | Unknown
-        | Forbidden
-        | Embeddable of string
+    let private renderReport groupId (r:Report) : Doc =
+        divAttr 
+            [
+                attr.``data-`` "groupId" groupId
+                attr.``data-`` "reportId" r.id
+            ]
+            [
+                a [text r.name]
+            ] 
+            :> Doc
 
-    type Report = {
-        name : string
-        id: string
-        groupId: string
-        embedUrl : string
-        access : ReportAccess
-        }
-
-    type Workspace = {
-        name : string
-        id : string
-        reports : Map<string, Report>
-        }
-
-    type Workspaces = Map<string, Workspace>
-
-    let private renderReport (r:Report) : Doc =
-        div [text r.name] :> Doc
-
-    let private renderReports (reports:Map<string, Report>) = 
+    let private renderReports groupId (reports:Map<string, Report>) = 
         reports 
         |> Map.toSeq
-        |> Seq.map (fun (_, r) -> renderReport r)
+        |> Seq.map (fun (_, r) -> renderReport groupId r)
         |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
@@ -59,7 +47,7 @@ module FrontEnd =
                 [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
                 [divAttr
                     [attr.``class`` "panel-body"]
-                    [w.reports |> renderReports]
+                    [w.reports |> renderReports w.id]
                 ]
             ]
             :> Doc
@@ -82,6 +70,7 @@ module FrontEnd =
         [
             divAttr [attr.id "embedReportHtml"; attr.hidden "true"] [text h]
             Main w
+            div [client <@ Client.Main() @>]
         ]
 
 
@@ -97,28 +86,9 @@ module Templating =
                 .Doc())
  
 module Site =
-    let private convert (pbiWs:PowerBI.Workspaces) : FrontEnd.Workspaces =
-        pbiWs
-        |> Map.map (fun _ w -> 
-            {
-            name = w.group.Name
-            id = w.group.Id
-            reports = w.reports 
-                        |> Map.map (fun _ r -> 
-                                {
-                                name = r.Name
-                                id = r.Id
-                                groupId = w.group.Id
-                                embedUrl = r.EmbedUrl
-                                access = FrontEnd.Unknown}) })
-    let workspaces = 
-        async {return PowerBI.workspaces} 
-        |> Async.RunSynchronously
-        |> convert
-
     let private HomePage (ctx: Context<EndPoint>) =
         let path = sprintf "%sRep.html" ctx.RootFolder
-        Templating.Main workspaces (File.ReadAllText(path))
+        Templating.Main (State.getWorkspaces()) (File.ReadAllText(path))
         
 
     //let AboutPage ctx =

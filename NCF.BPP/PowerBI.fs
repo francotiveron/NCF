@@ -24,22 +24,26 @@ type Workspace = {
 
 type Workspaces = Map<string, Workspace>
 
-let private reports gid =
+let private getReports gid =
     powerBiClient.Reports.GetReportsInGroup(gid).Value
     |> Seq.fold (fun (m:Map<string, Report>) (r:Report) -> Map.add r.Id r m) Map.empty
 
-let private groups : Workspaces = 
+let private getGroups () = 
     powerBiClient.Groups.GetGroups().Value
-    |> Seq.map (fun g -> g, reports g.Id)
+    |> Seq.map (fun g -> g, getReports g.Id)
     |> Seq.fold (fun m (g, rs) -> Map.add g.Id {group = g; reports = rs} m) Map.empty
 
-let workspaces = groups
+let mutable internal workspaces = Map.empty
 
+let internal refresh () =
+    workspaces <- getGroups()
 
-//let private getEmbedToken (pbic:PowerBIClient) gId rId =
-//    let generateTokenRequestParameters = new GenerateTokenRequest(accessLevel = "view")
-//    try pbic.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters).Token, true
-//    with x -> x.Message, false
+let private generateTokenRequestParameters = new GenerateTokenRequest(accessLevel = "view")
+
+let internal getEmbedToken gId rId =
+    try Ok (powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters).Token)
+    with x-> Error x.Message
+    
 
 //let private buildReport (pbic:PowerBIClient) (gId:string) (r:Models.Report) =
 //    let t, p = getEmbedToken pbic gId r.Id

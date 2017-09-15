@@ -26,6 +26,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NCF.BPP.PowerBI.JSExtension
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NCF.BPP", "NCF.BPP\NCF.BPP.fsproj", "{A4A93AB0-229B-4C19-9E73-7A4ABE8103F7}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ClientServer1", "ClientServer1\ClientServer1.fsproj", "{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +144,18 @@ Global
 		{A4A93AB0-229B-4C19-9E73-7A4ABE8103F7}.Release|x64.Build.0 = Release|Any CPU
 		{A4A93AB0-229B-4C19-9E73-7A4ABE8103F7}.Release|x86.ActiveCfg = Release|Any CPU
 		{A4A93AB0-229B-4C19-9E73-7A4ABE8103F7}.Release|x86.Build.0 = Release|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Debug|x64.Build.0 = Debug|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Debug|x86.Build.0 = Debug|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Release|x64.ActiveCfg = Release|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Release|x64.Build.0 = Release|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Release|x86.ActiveCfg = Release|Any CPU
+		{9B1515E2-2F38-4670-A8AA-13F96F30EDE0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

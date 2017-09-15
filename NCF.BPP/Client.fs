@@ -2,7 +2,6 @@
 
 open WebSharper
 open WebSharper.UI.Next
-open WebSharper.UI.Next.Client
 open WebSharper.UI.Next.Html
 open NCF.BPP.PowerBI.JSExtension
 open WebSharper.JavaScript
@@ -12,26 +11,12 @@ open PowerBI
 [<JavaScript>]
 module Client =
 
-    type ReportAccess = 
-        | Unknown
-        | Forbidden
-        | Embeddable of string
+    let Main () =
+        div [text "Test"]
+        //Doc.Verbatim "JQuery.Of(\"[data-reportId]\").Text(\"Pippo\").Ignore"
 
-    type Report = {
-        name : string
-        id: string
-        groupId: string
-        embedUrl : string
-        access : ReportAccess
-        }
-
-    type Workspace = {
-        name : string
-        id : string
-        reports : Map<string, Report>
-        }
-
-    type Workspaces = Map<string, Workspace>
+//[<JavaScript>]
+//module Client =
 
     //let fun1 (report) =
     //    let powerbi_settings = PowerBISettings(FilterPaneEnabled = true)
@@ -57,49 +42,49 @@ module Client =
     //            else p [text r.name])
     //        ]
     //        :> Doc
-    let private renderReport (r:Report) : Doc =
-        div [text r.name] :> Doc
+    //let private renderReport (r:Report) : Doc =
+    //    div [text r.name] :> Doc
 
-    let private renderReports (reports:Map<string, Report>) = 
-        reports 
-        |> Map.toSeq
-        |> Seq.map (fun (_, r) -> renderReport r)
-        |> Doc.Concat
+    //let private renderReports (reports:Map<string, Report>) = 
+    //    reports 
+    //    |> Map.toSeq
+    //    |> Seq.map (fun (_, r) -> renderReport r)
+    //    |> Doc.Concat
 
-    let private renderWorkspace i (w:Workspace) : Doc = 
-        divAttr 
-            [attr.``class`` "panel panel-default"]
-            [divAttr 
-                [attr.``class`` "panel-heading"]
-                [h4Attr
-                    [attr.``class`` "panel-title"]
-                    [aAttr
-                        [attr.``data-`` "toggle" "collapse"; attr.``data-`` "parent" "#accordion"; attr.href (sprintf "#collapse%d" (i + 1))]
-                        [text w.name]
-                    ]
-                ]
-            ;divAttr
-                [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
-                [divAttr
-                    [attr.``class`` "panel-body"]
-                    [w.reports |> renderReports]
-                ]
-            ]
-            :> Doc
+    //let private renderWorkspace i (w:Workspace) : Doc = 
+    //    divAttr 
+    //        [attr.``class`` "panel panel-default"]
+    //        [divAttr 
+    //            [attr.``class`` "panel-heading"]
+    //            [h4Attr
+    //                [attr.``class`` "panel-title"]
+    //                [aAttr
+    //                    [attr.``data-`` "toggle" "collapse"; attr.``data-`` "parent" "#accordion"; attr.href (sprintf "#collapse%d" (i + 1))]
+    //                    [text w.name]
+    //                ]
+    //            ]
+    //        ;divAttr
+    //            [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
+    //            [divAttr
+    //                [attr.``class`` "panel-body"]
+    //                [w.reports |> renderReports]
+    //            ]
+    //        ]
+    //        :> Doc
 
-    let private renderWorkspaces (workspaces:Workspaces) =
-        workspaces 
-        |> Map.toSeq
-        |> Seq.mapi (fun i (_, w) -> renderWorkspace i w)
-        |> Doc.Concat
+    //let private renderWorkspaces (workspaces:Workspaces) =
+    //    workspaces 
+    //    |> Map.toSeq
+    //    |> Seq.mapi (fun i (_, w) -> renderWorkspace i w)
+    //    |> Doc.Concat
 
-    let Main (workspaces:Workspaces) =
-        divAttr 
-            [attr.``class`` "container"]
-            [divAttr 
-                [attr.``class`` "panel-group"; attr.id "accordion"]
-                [workspaces |> renderWorkspaces]
-            ]
+    //let Main (workspaces:Workspaces) =
+    //    divAttr 
+    //        [attr.``class`` "container"]
+    //        [divAttr 
+    //            [attr.``class`` "panel-group"; attr.id "accordion"]
+    //            [workspaces |> renderWorkspaces]
+    //        ]
 
 (*
         let powerbi_target = divAttr [attr.style "height:720px"] []
