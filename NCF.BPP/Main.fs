@@ -14,14 +14,17 @@ module FrontEnd =
     open WebSharper.UI.Next.Html
     open State
 
+    let private f1 _ = ()
+
     let private renderReport groupId (r:Report) : Doc =
         divAttr 
             [
                 attr.``data-`` "groupId" groupId
                 attr.``data-`` "reportId" r.id
+                attr.``data-`` "embedUrl" r.embedUrl
             ]
             [
-                a [text r.name]
+                aAttr [attr.href "#"; on.click <@ Client.reportClicked @>]  [text r.name]
             ] 
             :> Doc
 

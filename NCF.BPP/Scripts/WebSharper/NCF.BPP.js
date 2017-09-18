@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,NCF,BPP,Client,WebSharper,UI,Next,Doc,AttrProxy,Seq;
+ var Global,NCF,BPP,Client,WebSharper,UI,Next,Doc,IntelliFactory,Runtime,Utils,Concurrency,Remoting,AjaxRemotingProvider;
  Global=window;
  NCF=Global.NCF=Global.NCF||{};
  BPP=NCF.BPP=NCF.BPP||{};
@@ -10,38 +10,65 @@
  UI=WebSharper&&WebSharper.UI;
  Next=UI&&UI.Next;
  Doc=Next&&Next.Doc;
- AttrProxy=Next&&Next.AttrProxy;
- Seq=WebSharper&&WebSharper.Seq;
- Client.Main=function(workspaces)
+ IntelliFactory=Global.IntelliFactory;
+ Runtime=IntelliFactory&&IntelliFactory.Runtime;
+ Utils=WebSharper&&WebSharper.Utils;
+ Concurrency=WebSharper&&WebSharper.Concurrency;
+ Remoting=WebSharper&&WebSharper.Remoting;
+ AjaxRemotingProvider=Remoting&&Remoting.AjaxRemotingProvider;
+ Client.Main=function()
  {
-  return Doc.Element("div",[AttrProxy.Create("class","container")],[Doc.Element("div",[AttrProxy.Create("class","panel-group"),AttrProxy.Create("id","accordion")],[Client.renderWorkspaces(workspaces)])]);
+  return Doc.Element("div",[],[]);
  };
- Client.renderWorkspaces=function(workspaces)
+ Client.init=function(a)
  {
-  return Doc.Concat(Seq.mapi(Client.renderWorkspace,workspaces));
+  Global.jQuery("[data-reportId]").each(Client.f);
  };
- Client.renderWorkspace=function(i,w)
+ Client.f=function(a,e)
  {
-  return Doc.Element("div",[AttrProxy.Create("class","panel panel-default")],[Doc.Element("div",[AttrProxy.Create("class","panel-heading")],[Doc.Element("h4",[AttrProxy.Create("class","panel-title")],[Doc.Element("a",[AttrProxy.Create("data-"+"toggle","collapse"),AttrProxy.Create("data-"+"parent","#accordion"),AttrProxy.Create("href",(function($1)
+  var $1,$2;
+  $1=e.getAttribute("data-groupId");
+  $2=e.getAttribute("data-reportId");
+  e.textContent=(((Runtime.Curried3(function($3,$4,$5)
   {
-   return function($2)
-   {
-    return $1("#collapse"+Global.String($2));
-   };
-  }(Global.id))(i+1))],[Doc.TextNode(w.name)])])]),Doc.Element("div",[AttrProxy.Create("class","panel-collapse collapse"),AttrProxy.Create("id",(function($1)
+   return $3(Utils.toSafe($4)+" - "+Utils.toSafe($5));
+  }))(Global.id))($1))($2);
+ };
+ Client.reportClicked=function(e,a)
+ {
+  var b;
+  Concurrency.Start((b=null,Concurrency.Delay(function()
   {
-   return function($2)
+   var div,$1,rId,embedUrl;
+   div=e.parentElement;
+   $1=div.getAttribute("data-groupId");
+   rId=div.getAttribute("data-reportId");
+   embedUrl=div.getAttribute("data-embedUrl");
+   Global.jQuery("*").css("cursor","progress");
+   return Concurrency.Bind(Client.getEmbedToken($1,rId),function(a$1)
    {
-    return $1("collapse"+Global.String($2));
-   };
-  }(Global.id))(i+1))],[Doc.Element("div",[AttrProxy.Create("class","panel-body")],[Client.renderReports(w.reports)])])]);
+    Global.jQuery("*").css("cursor","default");
+    return a$1.$==1?(Global.alert(a$1.$0),Concurrency.Zero()):(Client.openReport(e.textContent,embedUrl,rId,a$1.$0),Concurrency.Zero());
+   });
+  })),null);
  };
- Client.renderReports=function(rs)
+ Client.getEmbedToken=function(gId,rId)
  {
-  return Doc.Concat(Seq.map(Client.renderReport,rs));
+  var b;
+  b=null;
+  return Concurrency.Delay(function()
+  {
+   return(new AjaxRemotingProvider.New()).Async("NCF.BPP:NCF.BPP.Server.getEmbedTokenAsync:-483179291",[gId,rId]);
+  });
  };
- Client.renderReport=function(r)
+ Client.openReport=function(name,embedUrl,reportId,embedToken)
  {
-  return Doc.Element("div",[],[r["public"]?Doc.Element("a",[],[Doc.TextNode(r.name)]):Doc.Element("p",[],[Doc.TextNode(r.name)])]);
+  var powerbi_settings,r,powerbi_conf,r$1,html,view;
+  powerbi_settings=(r={},r.filterPaneEnabled=true,r.navContentPaneEnabled=true,r);
+  powerbi_conf=(r$1={},r$1.type="report",r$1.tokenType=1,r$1.accessToken=embedToken,r$1.embedUrl=embedUrl,r$1.id=reportId,r$1.permissions=7,r$1.settings=powerbi_settings,r$1);
+  html=Global.jQuery("#embedReportHtml").text();
+  view=Global.open();
+  view.document.write(html);
+  view.init("NCF.BPP - "+name,powerbi_conf);
  };
 }());

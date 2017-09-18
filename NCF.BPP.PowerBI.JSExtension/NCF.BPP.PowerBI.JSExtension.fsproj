@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props" Condition="Exists('..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>77961a91-3c04-41ae-9aa7-3df0b4e445c1</ProjectGuid>
+    <ProjectGuid>26c2c803-b6ac-4789-9c5f-214d362eced8</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NCF.BPP.PowerBI.JSExtension</RootNamespace>
     <AssemblyName>NCF.BPP.PowerBI.JSExtension</AssemblyName>
@@ -66,7 +67,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ValueTuple">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="WebSharper.Collections">
       <HintPath>..\packages\WebSharper.4.0.189.96-rc\lib\net40\WebSharper.Collections.dll</HintPath>
@@ -99,6 +100,14 @@
       <HintPath>..\packages\WebSharper.4.0.189.96-rc\lib\net40\WebSharper.Web.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <Import Project="..\packages\WebSharper.FSharp.4.0.189.96-rc\build\WebSharper.FSharp.targets" Condition="Exists('..\packages\WebSharper.FSharp.4.0.189.96-rc\build\WebSharper.FSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\WebSharper.FSharp.4.0.189.96-rc\build\WebSharper.FSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WebSharper.FSharp.4.0.189.96-rc\build\WebSharper.FSharp.targets'))" />
+    <Error Condition="!Exists('..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

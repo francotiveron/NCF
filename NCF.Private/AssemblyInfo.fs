@@ -1,4 +1,4 @@
-﻿namespace ClientServer1.AssemblyInfo
+﻿namespace NCF.Private.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("ClientServer1")>]
+[<assembly: AssemblyTitle("NCF.Private")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("ClientServer1")>]
+[<assembly: AssemblyProduct("NCF.Private")>]
 [<assembly: AssemblyCopyright("Copyright ©  2017")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
@@ -22,7 +22,7 @@ open System.Runtime.InteropServices
 [<assembly: ComVisible(false)>]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[<assembly: Guid("9b1515e2-2f38-4670-a8aa-13f96f30ede0")>]
+[<assembly: Guid("6a2f96c7-00b7-4695-8e37-766c76c4744b")>]
 
 // Version information for an assembly consists of the following four values:
 // 

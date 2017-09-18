@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>NPP</title>
+    <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style type="text/css">
         html, body {
@@ -22,26 +22,67 @@
 <body>
     <div id="reportContainer"></div>
     <script>
-        function init(report) {
+        function init(title, embed_config) {
             var models = window['powerbi-client'].models;
 
-            var config = {
-                type: 'report',
-                tokenType: models.TokenType.Embed,
-                accessToken: report.accessToken,
-                embedUrl: report.embedUrl,
-                id: report.reportId,
-                permissions: models.Permissions.All,
-                settings: {
-                    filterPaneEnabled: true,
-                    navContentPaneEnabled: true
+            //var config = {
+            //    type: 'report',
+            //    tokenType: embed_config.tokenType,
+            //    accessToken: embed_config.accessToken,
+            //    embedUrl: embed_config.embedUrl,
+            //    id: embed_config.id,
+            //    permissions: embed_config.permissions,
+            //    settings: embed_config.settings
+            //};
+
+            //var config = {
+            //    type: 'report',
+            //    tokenType: models.TokenType.Embed,
+            //    accessToken: embed_config.accessToken,
+            //    embedUrl: embed_config.embedUrl,
+            //    id: embed_config.id,
+            //    permissions: models.Permissions.All,
+            //    settings: {
+            //        filterPaneEnabled: true,
+            //        navContentPaneEnabled: true
+            //    }
+            //};
+            //var config = {
+            //    type: 'report',
+            //    tokenType: embed_config.tokenType,
+            //    accessToken: embed_config.accessToken,
+            //    embedUrl: embed_config.embedUrl,
+            //    id: embed_config.id,
+            //    permissions: embed_config.permissions,
+            //    settings: {
+            //        filterPaneEnabled: embed_config.settings.filterPaneEnabled,
+            //        navContentPaneEnabled: embed_config.settings.navContentPaneEnabled
+            //    }
+            //};
+
+            //function configConstructor(cfg) {
+            //    function settingConstructor(sett) {
+            //        for (var k in sett) this[k] = sett[k];
+            //    }
+            //    for (var k in cfg) this[k] = cfg[k];
+            //    this.settings = new settingConstructor(cfg.settings);
+            //};
+            function _clone(cfg) {
+                for (var k in cfg) {
+                    if (typeof(cfg[k]) === 'object') 
+                        this[k] = new _clone(cfg[k]);
+                    else
+                        this[k] = cfg[k];
                 }
             };
 
+            //debugger;
+            //var config = new configConstructor(embed_config);
+            var config = new _clone(embed_config);
             var reportContainer = document.getElementById('reportContainer');
-            var report = powerbi.embed(reportContainer, config);    
-            report.fullscreen();
-            document.title = "piroga";
+            var reportFrame = powerbi.embed(reportContainer, config);    
+            reportFrame.fullscreen();
+            document.title = title;
        }
     </script>
 </body>

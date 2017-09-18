@@ -6,12 +6,50 @@ open WebSharper.InterfaceGenerator
 
 module Definition =
 
+    let PowerBIView = 
+        Class "PowerBIView" |=> Inherits T<Window>
+
+    let PowerBISettings =
+        Pattern.Config "PowerBISettings" {
+            Required = []
+            Optional =
+                [
+                    "filterPaneEnabled" , T<bool>             
+                    "navContentPaneEnabled", T<bool>
+               ]
+        }
+
+    let PowerBIConfig =
+        Pattern.Config "PowerBIConfig" {
+            Required = []
+            Optional =
+                [
+                    "type", T<string>
+                    "tokenType", T<int>
+                    "accessToken" , T<string>
+                    "embedUrl", T<string>
+                    "id", T<string>  
+                    "permissions", T<int>
+                    "settings", PowerBISettings.Type
+                ]
+        }
+
+    let PowerBIViewClass = 
+            PowerBIView |+> Instance [ "init" => T<string>?title * PowerBIConfig?embed_config ^-> T<unit>]
+
+    let Assembly =
+        Assembly [
+            Namespace "NCF.BPP.PowerBI.JSExtension" [
+                PowerBIConfig
+                PowerBISettings
+                PowerBIViewClass
+                ]
+        ]
+
+(* github powerbi websharper demo
     let R1 = Resource "PowerBIResource" "scripts/powerbi.js"
 
     let PB = Class "powerbi"
-
-    let WI = Class "wi"
-             |=> Inherits T<Window>
 
     let PowerBISettings =
         Pattern.Config "PowerBISettings" {
@@ -42,23 +80,19 @@ module Definition =
                 "embed" => T<Dom.Element>?target * PowerBIConfig?config ^-> T<unit>
             ]
 
-    let WIClass = 
-            WI |+> Instance [ "init" => PowerBIConfig?config ^-> T<unit>]
-
     let Assembly =
         Assembly [
             Namespace "NCF.BPP.PowerBI.JSExtension" [
                 PowerBIConfig
                 PowerBISettings
                 PowerBIClass
-                WIClass
             ]
             Namespace "NCF.BPP.PowerBI.JSExtension.Resources" [                
                 R1
                 |> fun r -> r.AssemblyWide()
             ] 
         ] |> Requires [R1]
-
+*)
 (*
     let I1 =
         Interface "I1"
