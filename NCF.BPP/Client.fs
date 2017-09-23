@@ -17,7 +17,14 @@ module Client =
     type Permissions = Read = 0 | ReadWrite = 1 | Copy = 2 | Create = 4 | All = 7
     type TokenType = Aad = 0 | Embed = 1
 
+    let private sleep ms =
+        JS.SetTimeout (fun () -> ()) ms |> ignore
+
     let private openReport name embedUrl reportId embedToken =
+        let html = JQuery("#embedReportHtml").Text()
+        let view = JS.Window.Open() :?> PowerBIView
+        view.Document.Write(html)
+
         let powerbi_settings = PowerBISettings(FilterPaneEnabled = true, NavContentPaneEnabled = true)
         
         let powerbi_conf = 
@@ -30,10 +37,13 @@ module Client =
                 Permissions = int Permissions.All,
                 Settings = powerbi_settings)
 
-        let html = JQuery("#embedReportHtml").Text()
-        let view = JS.Window.Open() :?> PowerBIView
-        view.Document.Write(html)
-        view.Init("NCF.BPP - " + name, powerbi_conf)
+        while
+            try view.Init("NCF.BPP - " + name, powerbi_conf); false
+            with (err) -> true
+            do sleep 1
+        //JS.SetTimeout (fun () -> view.Init("NCF.BPP - " + name, powerbi_conf)) 3000 |> ignore
+        //JQuery(view.Document).Ready((fun () -> view.Init("NCF.BPP - " + name, powerbi_conf))).Ignore
+        //view.Document.AddEventListener("load", (fun () -> view.Init("NCF.BPP - " + name, powerbi_conf)), false)
 
     let private getEmbedToken gId rId =
         async { return! Server.getEmbedTokenAsync gId rId }

@@ -63,12 +63,37 @@
  };
  Client.openReport=function(name,embedUrl,reportId,embedToken)
  {
-  var powerbi_settings,r,powerbi_conf,r$1,html,view;
-  powerbi_settings=(r={},r.filterPaneEnabled=true,r.navContentPaneEnabled=true,r);
-  powerbi_conf=(r$1={},r$1.type="report",r$1.tokenType=1,r$1.accessToken=embedToken,r$1.embedUrl=embedUrl,r$1.id=reportId,r$1.permissions=7,r$1.settings=powerbi_settings,r$1);
+  var r,r$1,html,view,powerbi_settings,powerbi_conf,$1,$2;
   html=Global.jQuery("#embedReportHtml").text();
   view=Global.open();
   view.document.write(html);
-  view.init("NCF.BPP - "+name,powerbi_conf);
+  powerbi_settings=(r={},r.filterPaneEnabled=true,r.navContentPaneEnabled=true,r);
+  powerbi_conf=(r$1={},r$1.type="report",r$1.tokenType=1,r$1.accessToken=embedToken,r$1.embedUrl=embedUrl,r$1.id=reportId,r$1.permissions=7,r$1.settings=powerbi_settings,r$1);
+  try
+  {
+   $1=(view.init("NCF.BPP - "+name,powerbi_conf),false);
+  }
+  catch(err)
+  {
+   $1=true;
+  }
+  $2=$1;
+  while($2)
+   {
+    Client.sleep(1);
+    try
+    {
+     $1=(view.init("NCF.BPP - "+name,powerbi_conf),false);
+    }
+    catch(err$1)
+    {
+     $1=true;
+    }
+    $2=$1;
+   }
+ };
+ Client.sleep=function(ms)
+ {
+  Global.setTimeout(Global.ignore,ms);
  };
 }());

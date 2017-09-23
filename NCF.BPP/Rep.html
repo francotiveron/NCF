@@ -23,7 +23,8 @@
     <div id="reportContainer"></div>
     <script>
         function init(title, embed_config) {
-            var models = window['powerbi-client'].models;
+            //alert("init");
+            //var models = window['powerbi-client'].models;
 
             //var config = {
             //    type: 'report',
@@ -78,11 +79,16 @@
 
             //debugger;
             //var config = new configConstructor(embed_config);
-            var config = new _clone(embed_config);
-            var reportContainer = document.getElementById('reportContainer');
-            var reportFrame = powerbi.embed(reportContainer, config);    
-            reportFrame.fullscreen();
-            document.title = title;
+            try {
+                var config = new _clone(embed_config);
+                var reportContainer = document.getElementById('reportContainer');
+                var reportFrame = powerbi.embed(reportContainer, config);
+                reportFrame.fullscreen();
+                document.title = title;
+            }
+            catch (err) {
+                alert("Error: " + err);
+            }
        }
     </script>
 </body>
