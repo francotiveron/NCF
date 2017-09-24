@@ -13,6 +13,7 @@ type EndPoint =
 module FrontEnd =
     open WebSharper.UI.Next.Html
     open State
+    open WebSharper.UI.Next.Html.Tags
 
     let private f1 _ = ()
 
@@ -61,49 +62,70 @@ module FrontEnd =
         |> Seq.mapi (fun i (_, w) -> renderWorkspace i w)
         |> Doc.Concat
 
-    let Main (workspaces:Workspaces) =
+    let private powerBIAccordion (workspaces:Workspaces) =
         divAttr 
             [attr.``class`` "container"]
-            [divAttr 
+            [
+            h5 [text "Select Workspace to see the list of reports in it, then click on the report to open it"]
+            divAttr 
                 [attr.``class`` "panel-group"; attr.id "accordion"]
                 [workspaces |> renderWorkspaces]
             ]
 
-    let body w h : Doc list =
+    let private home workspaces rptPageHtml : Doc list =
         [
-            divAttr [attr.id "embedReportHtml"; attr.hidden "true"] [text h]
-            Main w
-            div [client <@ Client.Main() @>]
+        divAttr [attr.id "embedReportHtml"; attr.hidden "true"] [text rptPageHtml]
+        powerBIAccordion workspaces
+        div [client <@ Client.Main() @>]
         ]
 
+    let bodyHome workspaces rptPageHtml : Doc list =
+        [
+        divAttr [attr.``class`` "page-header"]
+            [
+            h2Attr [attr.``class`` "text-center"] [text "Power BI Reports"]
+            ]
+        divAttr [attr.``class`` "jumbotron"] (home workspaces rptPageHtml)
+        ]
+
+    let bodyAbout () : Doc list =
+        About.paragraphs 
+        |> List.map (fun (title, content) -> [h2 [text title] :> Doc; pAttr [attr.``class`` "about-text"] content :> Doc])
+        |> List.concat
 
 module Templating =
     open WebSharper.UI.Next.Html
 
-    type MainTemplate = Templating.Template<"Main.html">
+    type Template = Templating.Template<"Template.html">
 
-    let Main w h =
+    let Home workspaces html =
         Content.Page(     
-            MainTemplate()
-                .Body(FrontEnd.body w h)
+            Template()
+                .Body(FrontEnd.bodyHome workspaces html)
+                .HomeActive("active")
                 .Doc())
+
+    let About () =
+        Content.Page(     
+            Template()
+                .Body(FrontEnd.bodyAbout())
+                .AboutActive("active")
+                .Doc())
+
  
 module Site =
     let private HomePage (ctx: Context<EndPoint>) =
         let path = sprintf "%sRep.html" ctx.RootFolder
-        Templating.Main (State.getWorkspaces()) (File.ReadAllText(path))
+        Templating.Home (State.getWorkspaces()) (File.ReadAllText(path))
         
 
-    //let AboutPage ctx =
-    //    Templating.Main ctx EndPoint.About () "About" [
-    //        h1 [text "About"]
-    //        p [text "This is a template WebSharper client-server application."]
-    //    ]
+    let private AboutPage _ =
+        Templating.About()
 
     [<Website>]
     let Main =
         Application.MultiPage (fun ctx endpoint ->
             match endpoint with
             | EndPoint.Home -> HomePage ctx
-            | EndPoint.About -> HomePage ctx
+            | EndPoint.About -> AboutPage ctx
         )

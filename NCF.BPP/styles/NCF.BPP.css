@@ -4,3 +4,6 @@ body {
 .navbar-nav li a {
     line-height: 30px;
 }
+.about-text {
+    font-size: large;
+}
