@@ -14,60 +14,12 @@
         }
     </style>
     <script src="https://npmcdn.com/es6-promise@3.2.1"></script>
-<!--
-    <link rel="stylesheet" type="text/css" href="~/Content/style/style.css">
--->
-    <script src="scripts/powerbi.js"></script>
+    <script src="${Root}/scripts/powerbi.js"></script>
 </head>
 <body>
     <div id="reportContainer"></div>
     <script>
         function init(title, embed_config) {
-            //alert("init");
-            //var models = window['powerbi-client'].models;
-
-            //var config = {
-            //    type: 'report',
-            //    tokenType: embed_config.tokenType,
-            //    accessToken: embed_config.accessToken,
-            //    embedUrl: embed_config.embedUrl,
-            //    id: embed_config.id,
-            //    permissions: embed_config.permissions,
-            //    settings: embed_config.settings
-            //};
-
-            //var config = {
-            //    type: 'report',
-            //    tokenType: models.TokenType.Embed,
-            //    accessToken: embed_config.accessToken,
-            //    embedUrl: embed_config.embedUrl,
-            //    id: embed_config.id,
-            //    permissions: models.Permissions.All,
-            //    settings: {
-            //        filterPaneEnabled: true,
-            //        navContentPaneEnabled: true
-            //    }
-            //};
-            //var config = {
-            //    type: 'report',
-            //    tokenType: embed_config.tokenType,
-            //    accessToken: embed_config.accessToken,
-            //    embedUrl: embed_config.embedUrl,
-            //    id: embed_config.id,
-            //    permissions: embed_config.permissions,
-            //    settings: {
-            //        filterPaneEnabled: embed_config.settings.filterPaneEnabled,
-            //        navContentPaneEnabled: embed_config.settings.navContentPaneEnabled
-            //    }
-            //};
-
-            //function configConstructor(cfg) {
-            //    function settingConstructor(sett) {
-            //        for (var k in sett) this[k] = sett[k];
-            //    }
-            //    for (var k in cfg) this[k] = cfg[k];
-            //    this.settings = new settingConstructor(cfg.settings);
-            //};
             function _clone(cfg) {
                 for (var k in cfg) {
                     if (typeof(cfg[k]) === 'object') 
@@ -89,7 +41,8 @@
             catch (err) {
                 alert("Error: " + err);
             }
-       }
+        }
+        var pageInit = this.init;
     </script>
 </body>
 </html>

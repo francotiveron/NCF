@@ -60,13 +60,49 @@ let internal paragraphs : (string * Doc list) list =
                 """
             ]
          ul 
-            [li
+            [
+            li
                 [b [text "Power BI: "]
                  text """
                     See Power BI reports, with an important advantage: the user doesn't need to have a Power BI account. 
-                    Once the report creator has published it's work, the report is immediately accessible to all in BPP.
+                    Once the report creator has published a report, it is immediately visible to all in BPP.
                     """
                 ]
+            li
+                [b [text "Data input: "]
+                 text """
+                    Reporting is a view function, but sometimes it is necessary to change or add data. While the objective is to automate as much as possible
+                    , there are always cases where this cannot be done or is not wanted, and it is required that users
+                    at all levels are able to insert new or adjust existing data. For example, downtimes are manually inserted, or concentrate values
+                    are adjusted referring to field log collections. Power BI, like other reporting platforms, is designed to provide powerful data query 
+                    and presentation features but not so for input. BPP could then contain pages and features to input data.
+                    """
+                ]
+            li
+                [b [text "Integration: "]
+                 text """
+                    To obtain a unique wharehouse for business data in northparkes would be very difficult. There are multiple data originators and collectors.
+                    However, what would probably be more useful and doable is develop a unique operational business application that fetches data from the different
+                    sources, applies business rules to merge/elaborate them and renders them in a uniform user interface. BPP could become such an application.
+                    """
+                ]
+            ]
+        ]
+    )
+    (
+        "Wrap up",
+        [p 
+            [text 
+                """
+                Please have a go with BPP; at this stage is minimal and experimental, but it gives the idea. Further ideas and suggestions can be sent do Franco and Mitch
+                (Contacts in the navigation bar).
+                """
+            ]
+         p 
+            [text 
+                """
+                Thank you.
+                """
             ]
         ]
     )

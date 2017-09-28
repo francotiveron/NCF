@@ -24,6 +24,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <NameOfLastUsedPublishProfile>NCF.BPP</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Resources.fs" />
     <Compile Include="PowerBI.fs" />
     <Compile Include="State.fs" />
     <Compile Include="Reports.fs" />
@@ -158,15 +160,12 @@
     <Content Include="Setup.fsx" />
     <Content Include="Rep.html" />
     <None Include="packages.config" />
-    <Content Include="scripts\powerbi.min.js" />
-    <Content Include="scripts\powerbi.js.map" />
-    <Content Include="scripts\powerbi.js" />
     <Content Include="images\main-logo-northparkes-400.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\logo.png" />
     <Content Include="styles\NCF.BPP.css" />
-    <Content Include="ToDo.txt" />
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NCF.Private\NCF.Private.fsproj">

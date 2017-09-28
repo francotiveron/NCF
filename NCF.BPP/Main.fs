@@ -10,6 +10,10 @@ type EndPoint =
     | [<EndPoint "/">] Home
     | [<EndPoint "/about">] About
 
+module private Util = 
+    let appPath (ctx: Context<EndPoint>) = 
+        if ctx.ApplicationPath.Equals("/") then System.String.Empty else ctx.ApplicationPath
+
 module FrontEnd =
     open WebSharper.UI.Next.Html
     open State
@@ -81,46 +85,52 @@ module FrontEnd =
 
     let bodyHome workspaces rptPageHtml : Doc list =
         [
+        //Doc.WebControl(new Web.Require<Resources.BootStrapJS>())
         divAttr [attr.``class`` "page-header"]
             [
             h2Attr [attr.``class`` "text-center"] [text "Power BI Reports"]
             ]
         divAttr [attr.``class`` "jumbotron"] (home workspaces rptPageHtml)
         ]
-
+   
     let bodyAbout () : Doc list =
-        About.paragraphs 
-        |> List.map (fun (title, content) -> [h2 [text title] :> Doc; pAttr [attr.``class`` "about-text"] content :> Doc])
-        |> List.concat
+        //Doc.WebControl(new Web.Require<Resources.BootStrapJS>())
+        //:: 
+        (About.paragraphs 
+            |> List.map (fun (title, content) -> [h2 [text title] :> Doc; pAttr [attr.``class`` "about-text"] content :> Doc])
+            |> List.concat)
 
 module Templating =
     open WebSharper.UI.Next.Html
 
-    type Template = Templating.Template<"Template.html">
+    type Template = Templating.Template<"Template1.html">
+    type Rep = Templating.Template<"Rep.html">
 
-    let Home workspaces html =
+    let Home (ctx: Context<EndPoint>) workspaces html =
         Content.Page(     
             Template()
                 .Body(FrontEnd.bodyHome workspaces html)
                 .HomeActive("active")
+                .Root(Util.appPath ctx)
                 .Doc())
 
-    let About () =
+    let About (ctx: Context<EndPoint>) =
         Content.Page(     
             Template()
                 .Body(FrontEnd.bodyAbout())
                 .AboutActive("active")
+                .Root(Util.appPath ctx)
                 .Doc())
 
  
 module Site =
     let private HomePage (ctx: Context<EndPoint>) =
         let path = sprintf "%sRep.html" ctx.RootFolder
-        Templating.Home (State.getWorkspaces()) (File.ReadAllText(path))
+        Templating.Home ctx (State.getWorkspaces()) (File.ReadAllText(path).Replace(@"${Root}", Util.appPath ctx))
         
 
-    let private AboutPage _ =
-        Templating.About()
+    let private AboutPage (ctx: Context<EndPoint>) =
+        Templating.About ctx
 
     [<Website>]
     let Main =

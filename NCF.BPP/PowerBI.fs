@@ -14,13 +14,15 @@ open NCF.Private
 type PBIGroup = Group
 type PBIReport = Report
 
-let private powerBiClient =
+let private powerBiClientRefresh () =
     let ``as`` = ConfigurationManager.AppSettings
     let credential = new UserPasswordCredential(Credential.User1.Email, Credential.User1.Password);
     let authenticationContext = new AuthenticationContext(``as``.["AuthenticationAuthorityURL"])
     let authenticationResult = authenticationContext.AcquireTokenAsync(``as``.["PowerBIAuthURL"], ``as``.["AppClientId"], credential) |> Async.AwaitTask |> Async.RunSynchronously
     let tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer")
     new PowerBIClient(new Uri(``as``.["PowerBIApiURL"]), tokenCredentials)
+
+let mutable private powerBiClient = powerBiClientRefresh()
 
 type Report = {
     report : PBIReport
@@ -52,10 +54,15 @@ let private generateTokenRequestParameters = new GenerateTokenRequest(accessLeve
 
 let internal getEmbedToken gId rId =
     try 
-        let toten = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
-        Ok toten.Token
-    with x -> 
-        Error x.Message
+        let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
+        Ok token.Token
+    with _ -> 
+        powerBiClient <- powerBiClientRefresh()
+        try 
+            let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
+            Ok token.Token
+        with x -> 
+            Error x.Message
 //let internal getEmbedToken gId rId =
 //    try 
 //        if workspaces.ContainsKey(gId) && workspaces.[gId].reports.ContainsKey(rId) then

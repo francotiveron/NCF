@@ -1,0 +1,1 @@
+- Scripts Subfolder is not deployed by publish function
