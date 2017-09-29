@@ -10,7 +10,7 @@ module Client =
     open WebSharper.JQuery
     open WebSharper.UI.Next.Client.Attr
     open WebSharper.UI.Next.Client.HtmlExtensions
-    open NCF.BPP.PowerBI.JSExtension
+    //open NCF.BPP.PowerBI.JSExtension
     open Microsoft.PowerBI.Api.V2.Models
     open WebSharper.UI.Next.Client.HtmlExtensions
 
@@ -19,8 +19,8 @@ module Client =
 
     let private sleep ms =
         JS.SetTimeout (fun () -> ()) ms |> ignore
-
-    let private openReport name embedUrl reportId embedToken =
+(*
+    let private openReport1 name embedUrl reportId embedToken =
         let html = JQuery("#embedReportHtml").Text()
         let view = JS.Window.Open() :?> PowerBIView
         view.Document.Write(html)
@@ -45,6 +45,17 @@ module Client =
         //JS.SetTimeout (fun () -> view.Init("NCF.BPP - " + name, powerbi_conf)) 3000 |> ignore
         //JQuery(view.Document).Ready((fun () -> view.Init("NCF.BPP - " + name, powerbi_conf))).Ignore
         //view.Document.AddEventListener("load", (fun () -> view.Init("NCF.BPP - " + name, powerbi_conf)), false)
+*)
+    let private openReport name embedUrl reportId embedToken =
+        let html = 
+            JQuery("#embedReportHtml").Text()
+             .Replace("${{rplcTitle}}", "NCF.BPP - " + name)
+             .Replace("${{rplcEmbedToken}}", embedToken)
+             .Replace("${{rplcEmbedUrl}}", embedUrl)
+             .Replace("${{rplcReportId}}", reportId)
+
+        let view = JS.Window.Open()
+        view.Document.Write(html)
 
     let private getEmbedToken gId rId =
         async { return! Server.getEmbedTokenAsync gId rId }
