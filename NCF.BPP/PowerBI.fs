@@ -55,12 +55,12 @@ let private generateTokenRequestParameters = new GenerateTokenRequest(accessLeve
 let internal getEmbedToken gId rId =
     try 
         let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
-        Ok token.Token
+        Ok (token.Token, token.Expiration)
     with _ -> 
         powerBiClient <- powerBiClientRefresh()
         try 
             let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
-            Ok token.Token
+            Ok (token.Token, token.Expiration)
         with x -> 
             Error x.Message
 //let internal getEmbedToken gId rId =

@@ -10,7 +10,7 @@ type Report = {
     id: string
     groupId: string
     embedUrl : string
-    mutable embedToken : string option
+    mutable embedToken : (string * DateTime) option
     }
 
 type Workspace = {
@@ -51,11 +51,11 @@ let internal getEmbedToken gId rId =
         if workspaces.ContainsKey(gId) && workspaces.[gId].reports.ContainsKey(rId) then
             let rpt = workspaces.[gId].reports.[rId]
             match rpt.embedToken with
-            | Some token -> Ok token
-            | None -> 
+            | Some (token, expiration) when (DateTime.UtcNow < expiration) -> Ok token
+            | _ -> 
                 match PowerBI.getEmbedToken gId rId with
-                | Ok token -> rpt.embedToken <- Some token; Ok token
-                | it -> it
+                | Ok (token, exp) -> rpt.embedToken <- Some (token, (if exp.HasValue then exp.Value else DateTime.UtcNow) ); Ok token
+                | Error msg -> Error msg
         else
             Error "Report not Found"
     with x -> 
