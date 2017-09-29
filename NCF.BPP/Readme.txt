@@ -1,1 +1,3 @@
-- Scripts Subfolder is not deployed by publish function
+- Scripts & stiles Subfolders are not deployed by publish function (must be copied manually when changed)
+- IE supports dynamic creation of page with document.write, Chrome doesn't see the function init.
+- IE could be configured for compatibility view for intranet sites, this must be disabled otherwise bootstrap doesn't work

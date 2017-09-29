@@ -36,14 +36,15 @@ let private group2Workspace gId (group:Group) =
                         }) }
 
 let mutable private workspaces = Map.empty
-let mutable private lastRefresh = DateTime.MinValue
+//let mutable private lastRefresh = DateTime.MinValue
 
 let internal refresh () =
     workspaces <- PowerBI.getGroups() |> Map.map group2Workspace
-    lastRefresh <- DateTime.Now
+    //lastRefresh <- DateTime.Now
 
 let internal getWorkspaces () =
-    if (DateTime.Now - lastRefresh) > TimeSpan.FromHours(24.) then refresh()
+    //if (DateTime.Now - lastRefresh) > TimeSpan.FromHours(24.) then refresh()
+    if workspaces.IsEmpty then refresh()
     workspaces
 
 let internal getEmbedToken gId rId =
