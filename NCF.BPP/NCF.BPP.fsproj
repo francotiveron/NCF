@@ -164,6 +164,7 @@
     <Content Include="images\logo.png" />
     <Content Include="styles\NCF.BPP.css" />
     <Content Include="Readme.txt" />
+    <Content Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NCF.Private\NCF.Private.fsproj">
