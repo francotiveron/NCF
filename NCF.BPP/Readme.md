@@ -1,1 +1,1 @@
-﻿This repo contains a production running porject about embeddin powerBI content in an ASP.NET website. Technologies used: WebSharper, F#, javascript, IIS, ASP.NET
+﻿NCF.BPP is a production running project about embedding powerBI content in an ASP.NET website. Technologies used: WebSharper, F#, javascript, IIS, ASP.NET
