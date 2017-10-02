@@ -1,7 +1,0 @@
-+ Wait cursor while opening report
-+ hide password in PowerBI
-+ Dynamic Title on report page
-- Main Page format (NPM logo...)
-- About page
-- ProcessMORe redirection
-? Sweet Alert
