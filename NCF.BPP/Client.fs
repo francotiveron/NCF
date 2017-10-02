@@ -71,16 +71,3 @@ module Client =
             | Ok embedToken -> openReport e.TextContent embedUrl rId embedToken
             | Error message -> JS.Alert message
         } |> Async.Start
-
-    let f _ (e:Dom.Element) =
-        let gId, rId = e.GetAttribute("data-groupId"), e.GetAttribute("data-reportId")
-        e.TextContent <- sprintf "%s - %s" gId rId
-
-    let init _ =
-        //JQuery.Of("[data-reportId]").Text("Pippo").Ignore
-        JQuery.Of("[data-reportId]").Each(f).Ignore
-  
-    let Main () =
-        //JS.Document.
-        divAttr [(*OnAfterRender init*)] []
-        //JQuery.Of(init)

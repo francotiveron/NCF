@@ -19,8 +19,6 @@ module FrontEnd =
     open State
     open WebSharper.UI.Next.Html.Tags
 
-    let private f1 _ = ()
-
     let private renderReport groupId (r:Report) : Doc =
         divAttr 
             [
@@ -80,7 +78,6 @@ module FrontEnd =
         [
         divAttr [attr.id "embedReportHtml"; attr.hidden "true"] [text rptPageHtml]
         powerBIAccordion workspaces
-        div [client <@ Client.Main() @>]
         ]
 
     let bodyHome workspaces rptPageHtml : Doc list =
@@ -104,7 +101,6 @@ module Templating =
     open WebSharper.UI.Next.Html
 
     type Template = Templating.Template<"Template1.html">
-    type Rep = Templating.Template<"Rep.html">
 
     let Home (ctx: Context<EndPoint>) workspaces html =
         Content.Page(     

@@ -94,7 +94,7 @@ let internal paragraphs : (string * Doc list) list =
         [p 
             [text 
                 """
-                Please have a go with BPP; at this stage is minimal and experimental, but it gives the idea. Further ideas and suggestions can be sent do Franco and Mitch
+                Please have a go with BPP; at this stage is minimal and experimental, but it gives the idea. Further ideas and suggestions can be sent to Franco and Mitch
                 (Contacts in the navigation bar).
                 """
             ]

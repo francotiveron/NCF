@@ -1,40 +1,16 @@
 (function()
 {
  "use strict";
- var Global,NCF,BPP,Client,WebSharper,UI,Next,Doc,IntelliFactory,Runtime,Utils,Concurrency,Remoting,AjaxRemotingProvider,Strings;
+ var Global,NCF,BPP,Client,WebSharper,Concurrency,Remoting,AjaxRemotingProvider,Strings;
  Global=window;
  NCF=Global.NCF=Global.NCF||{};
  BPP=NCF.BPP=NCF.BPP||{};
  Client=BPP.Client=BPP.Client||{};
  WebSharper=Global.WebSharper;
- UI=WebSharper&&WebSharper.UI;
- Next=UI&&UI.Next;
- Doc=Next&&Next.Doc;
- IntelliFactory=Global.IntelliFactory;
- Runtime=IntelliFactory&&IntelliFactory.Runtime;
- Utils=WebSharper&&WebSharper.Utils;
  Concurrency=WebSharper&&WebSharper.Concurrency;
  Remoting=WebSharper&&WebSharper.Remoting;
  AjaxRemotingProvider=Remoting&&Remoting.AjaxRemotingProvider;
  Strings=WebSharper&&WebSharper.Strings;
- Client.Main=function()
- {
-  return Doc.Element("div",[],[]);
- };
- Client.init=function(a)
- {
-  Global.jQuery("[data-reportId]").each(Client.f);
- };
- Client.f=function(a,e)
- {
-  var $1,$2;
-  $1=e.getAttribute("data-groupId");
-  $2=e.getAttribute("data-reportId");
-  e.textContent=(((Runtime.Curried3(function($3,$4,$5)
-  {
-   return $3(Utils.toSafe($4)+" - "+Utils.toSafe($5));
-  }))(Global.id))($1))($2);
- };
  Client.reportClicked=function(e,a)
  {
   var b;

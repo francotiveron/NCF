@@ -144,7 +144,6 @@
     <Compile Include="Resources.fs" />
     <Compile Include="PowerBI.fs" />
     <Compile Include="State.fs" />
-    <Compile Include="Reports.fs" />
     <Compile Include="Remoting.fs" />
     <Compile Include="Client.fs" />
     <Compile Include="About.fs" />
@@ -165,6 +164,7 @@
     <Content Include="styles\NCF.BPP.css" />
     <Content Include="Readme.txt" />
     <Content Include="Readme.md" />
+    <Content Include="LandingPage.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NCF.Private\NCF.Private.fsproj">

@@ -20,6 +20,7 @@ type Workspace = {
     }
 
 type Workspaces = Map<string, Workspace>
+let mutable private workspaces = Map.empty
 
 let private group2Workspace gId (group:Group) =
     {
@@ -34,9 +35,6 @@ let private group2Workspace gId (group:Group) =
                         embedUrl = r.report.EmbedUrl
                         embedToken = None
                         }) }
-
-let mutable private workspaces = Map.empty
-//let mutable private lastRefresh = DateTime.MinValue
 
 let internal refresh () =
     workspaces <- PowerBI.getGroups() |> Map.map group2Workspace
