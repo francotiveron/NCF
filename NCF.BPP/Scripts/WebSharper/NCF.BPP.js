@@ -44,8 +44,4 @@
   html=Strings.Replace(Strings.Replace(Strings.Replace(Strings.Replace(Global.jQuery("#embedReportHtml").text(),"${{rplcTitle}}","NCF.BPP - "+name),"${{rplcEmbedToken}}",embedToken),"${{rplcEmbedUrl}}",embedUrl),"${{rplcReportId}}",reportId);
   Global.open().document.write(html);
  };
- Client.sleep=function(ms)
- {
-  Global.setTimeout(Global.ignore,ms);
- };
 }());
