@@ -19,13 +19,14 @@ module Client =
     //let private sleep ms =
     //    JS.SetTimeout (fun () -> ()) ms |> ignore
 
-    let private openReport name embedUrl reportId embedToken =
+    let private openEmbedPage pbiType name embedUrl id embedToken =
         let html = 
             JQuery("#embedReportHtml").Text()
+             .Replace("${{rplcType}}", pbiType)
              .Replace("${{rplcTitle}}", "NCF.BPP - " + name)
              .Replace("${{rplcEmbedToken}}", embedToken)
              .Replace("${{rplcEmbedUrl}}", embedUrl)
-             .Replace("${{rplcReportId}}", reportId)    
+             .Replace("${{rplcId}}", id)    
 
         let view = JS.Window.Open()
         view.Document.Write(html)
@@ -33,14 +34,14 @@ module Client =
     let private getEmbedToken gId rId =
         async { return! Server.getEmbedTokenAsync gId rId }
 
-    let reportClicked (e:Dom.Element) _ =
+    let pbiLinkClicked (e:Dom.Element) _ =
        async {
             let div = e.ParentElement
-            let gId, rId, embedUrl = div.GetAttribute("data-groupId"), div.GetAttribute("data-reportId"), div.GetAttribute("data-embedUrl")
+            let pbiType, gId, id, embedUrl = div.GetAttribute("data-pbiType"), div.GetAttribute("data-groupId"), div.GetAttribute("data-resourceId"), div.GetAttribute("data-embedUrl")
             JQuery("*").Css("cursor", "progress").Ignore
-            let! token = getEmbedToken gId rId
+            let! token = getEmbedToken gId id
             JQuery("*").Css("cursor", "default").Ignore
             match token with
-            | Ok embedToken -> openReport e.TextContent embedUrl rId embedToken
+            | Ok embedToken -> openEmbedPage pbiType e.TextContent embedUrl id embedToken
             | Error message -> JS.Alert message
         } |> Async.Start

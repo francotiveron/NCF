@@ -22,12 +22,26 @@ module FrontEnd =
     let private renderReport groupId (r:Report) : Doc =
         divAttr 
             [
+                attr.``data-`` "pbiType" "report"
                 attr.``data-`` "groupId" groupId
-                attr.``data-`` "reportId" r.id
+                attr.``data-`` "resourceId" r.id
                 attr.``data-`` "embedUrl" r.embedUrl
             ]
             [
-                aAttr [attr.href "#"; on.click <@ Client.reportClicked @>]  [text r.name]
+                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text r.name]
+            ] 
+            :> Doc
+
+    let private renderDashboard groupId (d:Dashboard) : Doc =
+        divAttr 
+            [
+                attr.``data-`` "pbiType" "dashboard"
+                attr.``data-`` "groupId" groupId
+                attr.``data-`` "resourceId" d.id
+                attr.``data-`` "embedUrl" d.embedUrl
+            ]
+            [
+                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text d.name]
             ] 
             :> Doc
 
@@ -35,6 +49,12 @@ module FrontEnd =
         reports 
         |> Map.toSeq
         |> Seq.map (fun (_, r) -> renderReport groupId r)
+        |> Doc.Concat
+
+    let private renderDashboards groupId (dashboards:Map<string, Dashboard>) = 
+        dashboards 
+        |> Map.toSeq
+        |> Seq.map (fun (_, d) -> renderDashboard groupId d)
         |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
@@ -53,7 +73,7 @@ module FrontEnd =
                 [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
                 [divAttr
                     [attr.``class`` "panel-body"]
-                    [w.reports |> renderReports w.id]
+                    ([w.dashboards |> renderDashboards w.id] @ [w.reports |> renderReports w.id])
                 ]
             ]
             :> Doc

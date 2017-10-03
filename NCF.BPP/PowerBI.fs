@@ -23,16 +23,27 @@ let mutable private powerBiClient = powerBiClientRefresh()
 
 type PBIGroup = Group
 type PBIReport = Report
+type PBIDashboard = Dashboard
 
 type Report = {
     report : PBIReport
     mutable token : EmbedToken
     }
 
+type Dashboard = {
+    dashboard : PBIDashboard
+    mutable token : EmbedToken
+    }
+
 type Group = {
     group : PBIGroup
     reports : Map<string, Report>
+    dashboards : Map<string, Dashboard>
     }
+
+let private getDashboards gid =
+    powerBiClient.Dashboards.GetDashboardsInGroup(gid).Value
+    |> Seq.fold (fun (m:Map<string, Dashboard>) (d:PBIDashboard) -> Map.add d.Id {dashboard = d; token = EmbedToken()} m) Map.empty
 
 let private getReports gid =
     powerBiClient.Reports.GetReportsInGroup(gid).Value
@@ -40,12 +51,12 @@ let private getReports gid =
 
 let internal getGroups () = 
     powerBiClient.Groups.GetGroups().Value
-    |> Seq.map (fun g -> g, getReports g.Id)
-    |> Seq.fold (fun m (g, rs) -> Map.add g.Id {group = g; reports = rs} m) Map.empty
+    |> Seq.map (fun g -> g, getReports g.Id, getDashboards g.Id)
+    |> Seq.fold (fun m (g, rs, ds) -> Map.add g.Id {group = g; reports = rs; dashboards = ds} m) Map.empty
 
 let private generateTokenRequestParameters = new GenerateTokenRequest(accessLevel = "view")
 
-let internal getEmbedToken gId rId =
+let internal getReportEmbedToken gId rId =
     try 
         let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
         Ok (token.Token, token.Expiration)
@@ -53,6 +64,18 @@ let internal getEmbedToken gId rId =
         powerBiClient <- powerBiClientRefresh()
         try 
             let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
+            Ok (token.Token, token.Expiration)
+        with x -> 
+            Error x.Message
+
+let internal getDashboardEmbedToken gId dId =
+    try 
+        let token = powerBiClient.Dashboards.GenerateTokenInGroup(gId, dId, generateTokenRequestParameters)
+        Ok (token.Token, token.Expiration)
+    with _ -> 
+        powerBiClient <- powerBiClientRefresh()
+        try 
+            let token = powerBiClient.Dashboards.GenerateTokenInGroup(gId, dId, generateTokenRequestParameters)
             Ok (token.Token, token.Expiration)
         with x -> 
             Error x.Message
