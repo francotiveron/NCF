@@ -28,7 +28,7 @@ module FrontEnd =
                 attr.``data-`` "embedUrl" r.embedUrl
             ]
             [
-                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text r.name]
+                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text ("R -> " + r.name)]
             ] 
             :> Doc
 
@@ -41,20 +41,24 @@ module FrontEnd =
                 attr.``data-`` "embedUrl" d.embedUrl
             ]
             [
-                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text d.name]
+                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text ("D -> " + d.name)]
             ] 
             :> Doc
 
     let private renderReports groupId (reports:Map<string, Report>) = 
         reports 
         |> Map.toSeq
-        |> Seq.map (fun (_, r) -> renderReport groupId r)
+        |> Seq.map (fun (_, r) -> r)
+        |> Seq.sortBy (fun r -> r.name)
+        |> Seq.map (fun r -> renderReport groupId r)
         |> Doc.Concat
 
     let private renderDashboards groupId (dashboards:Map<string, Dashboard>) = 
-        dashboards 
+        dashboards
         |> Map.toSeq
-        |> Seq.map (fun (_, d) -> renderDashboard groupId d)
+        |> Seq.map (fun (_, d) -> d)
+        |> Seq.sortBy (fun d -> d.name)
+        |> Seq.map (fun d -> renderDashboard groupId d)
         |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
