@@ -19,46 +19,25 @@ module FrontEnd =
     open State
     open WebSharper.UI.Next.Html.Tags
 
-    let private renderReport groupId (r:Report) : Doc =
+    let private renderResource groupId (m:Metadata) : Doc =
         divAttr 
             [
-                attr.``data-`` "pbiType" "report"
+                attr.``data-`` "pbiType" m.Type
                 attr.``data-`` "groupId" groupId
-                attr.``data-`` "resourceId" r.id
-                attr.``data-`` "embedUrl" r.embedUrl
+                attr.``data-`` "resourceId" m.id
+                attr.``data-`` "embedUrl" m.embedUrl
             ]
             [
-                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text ("R -> " + r.name)]
+                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text (m.TypeId + " -> " + m.name)]
             ] 
             :> Doc
 
-    let private renderDashboard groupId (d:Dashboard) : Doc =
-        divAttr 
-            [
-                attr.``data-`` "pbiType" "dashboard"
-                attr.``data-`` "groupId" groupId
-                attr.``data-`` "resourceId" d.id
-                attr.``data-`` "embedUrl" d.embedUrl
-            ]
-            [
-                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text ("D -> " + d.name)]
-            ] 
-            :> Doc
-
-    let private renderReports groupId (reports:Map<string, Report>) = 
-        reports 
+    let private renderResources groupId (resources:Map<string, Metadata>) = 
+        resources
         |> Map.toSeq
         |> Seq.map (fun (_, r) -> r)
         |> Seq.sortBy (fun r -> r.name)
-        |> Seq.map (fun r -> renderReport groupId r)
-        |> Doc.Concat
-
-    let private renderDashboards groupId (dashboards:Map<string, Dashboard>) = 
-        dashboards
-        |> Map.toSeq
-        |> Seq.map (fun (_, d) -> d)
-        |> Seq.sortBy (fun d -> d.name)
-        |> Seq.map (fun d -> renderDashboard groupId d)
+        |> Seq.map (fun r -> renderResource groupId r)
         |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
@@ -77,7 +56,7 @@ module FrontEnd =
                 [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
                 [divAttr
                     [attr.``class`` "panel-body"]
-                    ([w.dashboards |> renderDashboards w.id] @ [w.reports |> renderReports w.id])
+                    ([w.resources |> renderResources w.id])
                 ]
             ]
             :> Doc

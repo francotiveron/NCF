@@ -13,12 +13,6 @@ module Client =
     open Microsoft.PowerBI.Api.V2.Models
     open WebSharper.UI.Next.Client.HtmlExtensions
 
-    //type Permissions = Read = 0 | ReadWrite = 1 | Copy = 2 | Create = 4 | All = 7
-    //type TokenType = Aad = 0 | Embed = 1
-
-    //let private sleep ms =
-    //    JS.SetTimeout (fun () -> ()) ms |> ignore
-
     let private openEmbedPage pbiType name embedUrl id embedToken =
         let html = 
             JQuery("#embedReportHtml").Text()

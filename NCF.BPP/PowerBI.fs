@@ -24,6 +24,8 @@ let mutable private powerBiClient = powerBiClientRefresh()
 type PBIGroup = Group
 type PBIReport = Report
 type PBIDashboard = Dashboard
+type PBIResourceType = Dashboard | Report
+type PBIResource = D of PBIDashboard | R of PBIReport
 
 type Report = {
     report : PBIReport
@@ -35,47 +37,63 @@ type Dashboard = {
     mutable token : EmbedToken
     }
 
+type Resource = 
+    {
+    ``type``: PBIResourceType
+    resource : PBIResource
+    mutable token : EmbedToken
+    }
+    static member getId(r) = 
+        match r with
+        | D d -> d.Id
+        | R r -> r.Id
+    member this.Id
+        with get() = Resource.getId(this.resource)
+    member this.Name
+        with get() =
+            match this.resource with
+            | D d -> d.DisplayName
+            | R r -> r.Name
+    member this.EmbedUrl
+        with get() =
+            match this.resource with
+            | D d -> d.EmbedUrl
+            | R r -> r.EmbedUrl
+
 type Group = {
     group : PBIGroup
-    reports : Map<string, Report>
-    dashboards : Map<string, Dashboard>
+    resources : Map<string, Resource>
     }
 
-let private getDashboards gid =
-    powerBiClient.Dashboards.GetDashboardsInGroup(gid).Value
-    |> Seq.fold (fun (m:Map<string, Dashboard>) (d:PBIDashboard) -> Map.add d.Id {dashboard = d; token = EmbedToken()} m) Map.empty
 
-let private getReports gid =
-    powerBiClient.Reports.GetReportsInGroup(gid).Value
-    |> Seq.fold (fun (m:Map<string, Report>) (r:PBIReport) -> Map.add r.Id {report = r; token = EmbedToken()} m) Map.empty
+let private getResources gid =
+    seq {
+        yield! powerBiClient.Dashboards.GetDashboardsInGroup(gid).Value |> Seq.map (fun d -> Dashboard, D d)
+        yield! powerBiClient.Reports.GetReportsInGroup(gid).Value |> Seq.map (fun r -> Report, R r)
+    }
+    |> Seq.fold (fun (m:Map<string, Resource>) (t:PBIResourceType, r:PBIResource) -> Map.add (Resource.getId(r)) {``type`` = t; resource = r; token = EmbedToken()} m) Map.empty
 
 let internal getGroups () = 
     powerBiClient.Groups.GetGroups().Value
-    |> Seq.map (fun g -> g, getReports g.Id, getDashboards g.Id)
-    |> Seq.fold (fun m (g, rs, ds) -> Map.add g.Id {group = g; reports = rs; dashboards = ds} m) Map.empty
+    |> Seq.map (fun g -> g, getResources g.Id)
+    |> Seq.fold (fun m (g, rs) -> Map.add g.Id {group = g; resources = rs} m) Map.empty
 
 let private generateTokenRequestParameters = new GenerateTokenRequest(accessLevel = "view")
 
-let internal getReportEmbedToken gId rId =
+let internal getEmbedToken ``type`` gId id =
+    let generator = 
+        match ``type`` with
+        | Dashboard -> powerBiClient.Dashboards.GenerateTokenInGroup
+        | Report -> powerBiClient.Reports.GenerateTokenInGroup
+
     try 
-        let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
+        let token = generator(gId, id, generateTokenRequestParameters)
         Ok (token.Token, token.Expiration)
     with _ -> 
         powerBiClient <- powerBiClientRefresh()
         try 
-            let token = powerBiClient.Reports.GenerateTokenInGroup(gId, rId, generateTokenRequestParameters)
+            let token = generator(gId, id, generateTokenRequestParameters)
             Ok (token.Token, token.Expiration)
         with x -> 
             Error x.Message
 
-let internal getDashboardEmbedToken gId dId =
-    try 
-        let token = powerBiClient.Dashboards.GenerateTokenInGroup(gId, dId, generateTokenRequestParameters)
-        Ok (token.Token, token.Expiration)
-    with _ -> 
-        powerBiClient <- powerBiClientRefresh()
-        try 
-            let token = powerBiClient.Dashboards.GenerateTokenInGroup(gId, dId, generateTokenRequestParameters)
-            Ok (token.Token, token.Expiration)
-        with x -> 
-            Error x.Message
