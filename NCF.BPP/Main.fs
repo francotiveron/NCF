@@ -9,6 +9,7 @@ open System.IO
 type EndPoint =
     | [<EndPoint "/">] Home
     | [<EndPoint "/about">] About
+    | [<EndPoint "/refresh">] Refresh
 
 module private Util = 
     let appPath (ctx: Context<EndPoint>) = 
@@ -18,6 +19,7 @@ module FrontEnd =
     open WebSharper.UI.Next.Html
     open State
     open WebSharper.UI.Next.Html.Tags
+    open System.Web
 
     let private renderResource groupId (m:Metadata) : Doc =
         divAttr 
@@ -99,6 +101,7 @@ module FrontEnd =
         (About.paragraphs 
             |> List.map (fun (title, content) -> [h2 [text title] :> Doc; pAttr [attr.``class`` "about-text"] content :> Doc])
             |> List.concat)
+            //@ [div [text (HttpContext.Current.User.Identity.Name)]]
 
 module Templating =
     open WebSharper.UI.Next.Html
@@ -113,7 +116,7 @@ module Templating =
                 .Root(Util.appPath ctx)
                 .Doc())
 
-    let About (ctx: Context<EndPoint>) =
+    let About (ctx: Context<EndPoint>) = 
         Content.Page(     
             Template()
                 .Body(FrontEnd.bodyAbout())
@@ -132,9 +135,10 @@ module Site =
         Templating.About ctx
 
     [<Website>]
-    let Main =
+    let Main = 
         Application.MultiPage (fun ctx endpoint ->
             match endpoint with
             | EndPoint.Home -> HomePage ctx
             | EndPoint.About -> AboutPage ctx
+            | EndPoint.Refresh -> State.refresh(); HomePage ctx
         )

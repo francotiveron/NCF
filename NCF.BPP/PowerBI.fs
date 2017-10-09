@@ -13,9 +13,9 @@ open NCF.Private
 
 let private powerBiClientRefresh () =
     let ``as`` = ConfigurationManager.AppSettings
-    let credential = new UserPasswordCredential(Credential.User1.Email, Credential.User1.Password);
+    let credential = new UserPasswordCredential(Credential.user1.email, Credential.user1.password);
     let authenticationContext = new AuthenticationContext(``as``.["AuthenticationAuthorityURL"])
-    let authenticationResult = authenticationContext.AcquireTokenAsync(``as``.["PowerBIAuthURL"], ``as``.["AppClientId"], credential) |> Async.AwaitTask |> Async.RunSynchronously
+    let authenticationResult = authenticationContext.AcquireTokenAsync(``as``.["PowerBIAuthURL"], Credential.user1.appClientId, credential) |> Async.AwaitTask |> Async.RunSynchronously
     let tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer")
     new PowerBIClient(new Uri(``as``.["PowerBIApiURL"]), tokenCredentials)
 

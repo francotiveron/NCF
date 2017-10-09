@@ -33,6 +33,7 @@ type Workspace = {
 
 type Workspaces = Map<string, Workspace>
 let mutable private workspaces = Map.empty
+let mutable private lastRefresh = DateTime.Now
 
 let private group2Workspace gId (group:Group) =
     {
@@ -52,10 +53,10 @@ let private group2Workspace gId (group:Group) =
 
 let internal refresh () =
     workspaces <- PowerBI.getGroups() |> Map.map group2Workspace
-    //lastRefresh <- DateTime.Now
+    lastRefresh <- DateTime.Now
 
 let internal getWorkspaces () =
-    //if (DateTime.Now - lastRefresh) > TimeSpan.FromHours(24.) then refresh()
+    if (DateTime.Now - lastRefresh) > TimeSpan.FromHours(24.) then refresh()
     if workspaces.IsEmpty then refresh()
     workspaces
 
