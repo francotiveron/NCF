@@ -81,18 +81,18 @@ let internal getGroups () =
 let private generateTokenRequestParameters = new GenerateTokenRequest(accessLevel = "view")
 
 let internal getEmbedToken ``type`` gId id =
-    let generator = 
+    let generator () = 
         match ``type`` with
         | Dashboard -> powerBiClient.Dashboards.GenerateTokenInGroup
         | Report -> powerBiClient.Reports.GenerateTokenInGroup
 
     try 
-        let token = generator(gId, id, generateTokenRequestParameters)
+        let token = generator()(gId, id, generateTokenRequestParameters)
         Ok (token.Token, token.Expiration)
     with _ -> 
         powerBiClient <- powerBiClientRefresh()
         try 
-            let token = generator(gId, id, generateTokenRequestParameters)
+            let token = generator()(gId, id, generateTokenRequestParameters)
             Ok (token.Token, token.Expiration)
         with x -> 
             Error x.Message
