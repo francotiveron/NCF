@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props" Condition="Exists('..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props')" />
+  <Import Project="..\packages\FSharp.Compiler.Tools.4.1.27\build\FSharp.Compiler.Tools.props" Condition="Exists('..\packages\FSharp.Compiler.Tools.4.1.27\build\FSharp.Compiler.Tools.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -245,9 +245,9 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\FSharp.Compiler.Tools.4.1.23\build\FSharp.Compiler.Tools.props'))" />
     <Error Condition="!Exists('..\packages\WebSharper.FSharp.4.0.192.106\build\WebSharper.FSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WebSharper.FSharp.4.0.192.106\build\WebSharper.FSharp.targets'))" />
     <Error Condition="!Exists('..\packages\WebSharper.UI.Next.4.0.10.92\build\WebSharper.UI.Next.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WebSharper.UI.Next.4.0.10.92\build\WebSharper.UI.Next.targets'))" />
+    <Error Condition="!Exists('..\packages\FSharp.Compiler.Tools.4.1.27\build\FSharp.Compiler.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\FSharp.Compiler.Tools.4.1.27\build\FSharp.Compiler.Tools.props'))" />
   </Target>
   <Import Project="..\packages\WebSharper.FSharp.4.0.192.106\build\WebSharper.FSharp.targets" Condition="Exists('..\packages\WebSharper.FSharp.4.0.192.106\build\WebSharper.FSharp.targets')" />
   <Import Project="..\packages\WebSharper.UI.Next.4.0.10.92\build\WebSharper.UI.Next.targets" Condition="Exists('..\packages\WebSharper.UI.Next.4.0.10.92\build\WebSharper.UI.Next.targets')" />
