@@ -149,7 +149,7 @@
  };
  Json.Activate=function(json)
  {
-  var types,i,$1;
+  var $1,types,i,$2;
   function decode(x)
   {
    var o,ti,t,r,k;
@@ -164,7 +164,7 @@
       {
        o=Json.shallowMap(decode,x.$V);
        ti=x.$T;
-       if(Unchecked.Equals(typeof ti,"undefined"))
+       if(ti===void 0)
         return o;
        else
         {
@@ -188,9 +188,15 @@
     else
      return x;
   }
-  types=json.$TYPES;
-  for(i=0,$1=Arrays.length(types)-1;i<=$1;i++)Arrays.set(types,i,Json.lookup(Arrays.get(types,i)));
-  return decode(json.$DATA);
+  types=json?json.$TYPES:void 0;
+  if(types===void 0)
+   $1=json;
+  else
+   {
+    for(i=0,$2=Arrays.length(types)-1;i<=$2;i++)Arrays.set(types,i,Json.lookup(Arrays.get(types,i)));
+    $1=json.$DATA;
+   }
+  return decode($1);
  };
  Json.shallowMap=function(f,x)
  {
@@ -438,21 +444,22 @@
  {
   this.node=node;
  },SingleNode);
- Activator.hasDocument=function()
+ Activator.hasDocumentAndJQuery=function()
  {
-  return typeof Global.document!=="undefined";
+  return typeof Global.document!=="undefined"&&typeof Global.jQuery!=="undefined";
  };
  Activator.Activate=function()
  {
   var meta;
-  if(Activator.hasDocument())
+  if(Activator.hasDocumentAndJQuery())
    {
     meta=Global.document.getElementById("websharper-data");
     meta?Global.jQuery(Global.document).ready(function()
     {
      function a(k,v)
      {
-      v.Body().ReplaceInDom(Global.document.getElementById(k));
+      if("Body"in v)
+       v.Body().ReplaceInDom(Global.document.getElementById(k));
      }
      return Arrays.iter(function($1)
      {
@@ -2171,33 +2178,53 @@
   for(i=0,$1=arr1.length-1;i<=$1;i++)res[i]=f(i,arr1[i],arr2[i]);
   return res;
  };
- Arrays.max=function(x)
+ Arrays.max=function(arr)
  {
-  return Arrays.reduce(function($1,$2)
-  {
-   return Unchecked.Compare($1,$2)===1?$1:$2;
-  },x);
+  var m,i,$1,x;
+  Arrays.nonEmpty(arr);
+  m=arr[0];
+  for(i=1,$1=arr.length-1;i<=$1;i++){
+   x=arr[i];
+   Unchecked.Compare(x,m)===1?m=x:void 0;
+  }
+  return m;
  };
  Arrays.maxBy=function(f,arr)
  {
-  return Arrays.reduce(function($1,$2)
-  {
-   return Unchecked.Compare(f($1),f($2))===1?$1:$2;
-  },arr);
+  var m,fm,i,$1,x,fx;
+  Arrays.nonEmpty(arr);
+  m=arr[0];
+  fm=f(m);
+  for(i=1,$1=arr.length-1;i<=$1;i++){
+   x=arr[i];
+   fx=f(x);
+   Unchecked.Compare(fx,fm)===1?(m=x,fm=fx):void 0;
+  }
+  return m;
  };
- Arrays.min=function(x)
+ Arrays.min=function(arr)
  {
-  return Arrays.reduce(function($1,$2)
-  {
-   return Unchecked.Compare($1,$2)===-1?$1:$2;
-  },x);
+  var m,i,$1,x;
+  Arrays.nonEmpty(arr);
+  m=arr[0];
+  for(i=1,$1=arr.length-1;i<=$1;i++){
+   x=arr[i];
+   Unchecked.Compare(x,m)===-1?m=x:void 0;
+  }
+  return m;
  };
  Arrays.minBy=function(f,arr)
  {
-  return Arrays.reduce(function($1,$2)
-  {
-   return Unchecked.Compare(f($1),f($2))===-1?$1:$2;
-  },arr);
+  var m,fm,i,$1,x,fx;
+  Arrays.nonEmpty(arr);
+  m=arr[0];
+  fm=f(m);
+  for(i=1,$1=arr.length-1;i<=$1;i++){
+   x=arr[i];
+   fx=f(x);
+   Unchecked.Compare(fx,fm)===-1?(m=x,fm=fx):void 0;
+  }
+  return m;
  };
  Arrays.ofList=function(xs)
  {
@@ -4122,33 +4149,65 @@
     return res;
    }
  };
- List.max=function(l)
+ List.max=function(list)
  {
-  return Seq.reduce(function($1,$2)
-  {
-   return Unchecked.Compare($1,$2)===1?$1:$2;
-  },l);
+  var m,l,x;
+  List.nonEmpty(list);
+  m=list.$0;
+  l=list.$1;
+  while(l.$==1)
+   {
+    x=l.$0;
+    Unchecked.Compare(x,m)===1?m=x:void 0;
+    l=l.$1;
+   }
+  return m;
  };
- List.maxBy=function(f,l)
+ List.maxBy=function(f,list)
  {
-  return Seq.reduce(function($1,$2)
-  {
-   return Unchecked.Compare(f($1),f($2))===1?$1:$2;
-  },l);
+  var m,fm,l,x,fx;
+  List.nonEmpty(list);
+  m=list.$0;
+  fm=f(m);
+  l=list.$1;
+  while(l.$==1)
+   {
+    x=l.$0;
+    fx=f(x);
+    Unchecked.Compare(fx,fm)===1?(m=x,fm=fx):void 0;
+    l=l.$1;
+   }
+  return m;
  };
- List.min=function(l)
+ List.min=function(list)
  {
-  return Seq.reduce(function($1,$2)
-  {
-   return Unchecked.Compare($1,$2)===-1?$1:$2;
-  },l);
+  var m,l,x;
+  List.nonEmpty(list);
+  m=list.$0;
+  l=list.$1;
+  while(l.$==1)
+   {
+    x=l.$0;
+    Unchecked.Compare(x,m)===-1?m=x:void 0;
+    l=l.$1;
+   }
+  return m;
  };
- List.minBy=function(f,l)
+ List.minBy=function(f,list)
  {
-  return Seq.reduce(function($1,$2)
-  {
-   return Unchecked.Compare(f($1),f($2))===-1?$1:$2;
-  },l);
+  var m,fm,l,x,fx;
+  List.nonEmpty(list);
+  m=list.$0;
+  fm=f(m);
+  l=list.$1;
+  while(l.$==1)
+   {
+    x=l.$0;
+    fx=f(x);
+    Unchecked.Compare(fx,fm)===-1?(m=x,fm=fx):void 0;
+    l=l.$1;
+   }
+  return m;
  };
  List.ofArray=function(arr)
  {
@@ -4212,6 +4271,19 @@
  {
   return List.ofArray(Arrays.permute(f,Arrays.ofList(l)));
  };
+ List.reduce=function(f,list)
+ {
+  var r,l;
+  List.nonEmpty(list);
+  r=list.$0;
+  l=list.$1;
+  while(l.$==1)
+   {
+    r=f(r,l.$0);
+    l=l.$1;
+   }
+  return r;
+ };
  List.reduceBack=function(f,l)
  {
   return Arrays.reduceBack(f,Arrays.ofList(l));
@@ -4253,17 +4325,17 @@
  };
  List.sortBy=function(f,l)
  {
-  return List.sortWith(function($1,$2)
-  {
-   return Unchecked.Compare(f($1),f($2));
-  },l);
+  var a;
+  a=Arrays.ofList(l);
+  Arrays.sortInPlaceBy(f,a);
+  return List.ofArray(a);
  };
  List.sortByDescending=function(f,l)
  {
-  return List.sortWith(function($1,$2)
-  {
-   return-Unchecked.Compare(f($1),f($2));
-  },l);
+  var a;
+  a=Arrays.ofList(l);
+  Arrays.sortInPlaceByDescending(f,a);
+  return List.ofArray(a);
  };
  List.sortDescending=function(l)
  {
@@ -4404,7 +4476,7 @@
  List.last=function(list)
  {
   var r,t;
-  list.$==0?List.listEmpty():null;
+  List.nonEmpty(list);
   r=list;
   t=r.$1;
   while(t.$==1)
@@ -4472,6 +4544,11 @@
  List.splitAt=function(n,list)
  {
   return[List.ofSeq(Seq.take(n,list)),List.skip(n,list)];
+ };
+ List.nonEmpty=function(l)
+ {
+  if(l.$==0)
+   List.listEmpty();
  };
  List.listEmpty=function()
  {
@@ -4853,9 +4930,10 @@
   return{
    GetEnumerator:function()
    {
-    var first;
+    var e1,first;
+    e1=Enumerator.Get(s1);
     first=[true];
-    return new T.New(Enumerator.Get(s1),null,function(x)
+    return new T.New(e1,null,function(x)
     {
      var x$1;
      return x.s.MoveNext()?(x.c=x.s.Current(),true):(x$1=x.s,!Unchecked.Equals(x$1,null)?x$1.Dispose():void 0,x.s=null,first[0]&&(first[0]=false,x.s=Enumerator.Get(s2),x.s.MoveNext()?(x.c=x.s.Current(),true):(x.s.Dispose(),x.s=null,false)));
@@ -4885,7 +4963,7 @@
    }($1))($2);
   },[0,0],s);
   count=p[0];
-  return count===0?Operators.InvalidArg("source","The input sequence was empty."):p[1]/count;
+  return count===0?Seq.seqEmpty():p[1]/count;
  };
  Seq.averageBy=function(f,s)
  {
@@ -4904,7 +4982,7 @@
    }($1))($2);
   },[0,0],s);
   count=p[0];
-  return count===0?Operators.InvalidArg("source","The input sequence was empty."):p[1]/count;
+  return count===0?Seq.seqEmpty():p[1]/count;
  };
  Seq.cache=function(s)
  {
@@ -5383,31 +5461,95 @@
  };
  Seq.maxBy=function(f,s)
  {
-  return Seq.reduce(function($1,$2)
+  var e,m,fm,x,fx;
+  e=Enumerator.Get(s);
+  try
   {
-   return Unchecked.Compare(f($1),f($2))>=0?$1:$2;
-  },s);
+   if(!e.MoveNext())
+    Seq.seqEmpty();
+   m=e.Current();
+   fm=f(m);
+   while(e.MoveNext())
+    {
+     x=e.Current();
+     fx=f(x);
+     Unchecked.Compare(fx,fm)===1?(m=x,fm=fx):void 0;
+    }
+   return m;
+  }
+  finally
+  {
+   if("Dispose"in e)
+    e.Dispose();
+  }
  };
  Seq.minBy=function(f,s)
  {
-  return Seq.reduce(function($1,$2)
+  var e,m,fm,x,fx;
+  e=Enumerator.Get(s);
+  try
   {
-   return Unchecked.Compare(f($1),f($2))<=0?$1:$2;
-  },s);
+   if(!e.MoveNext())
+    Seq.seqEmpty();
+   m=e.Current();
+   fm=f(m);
+   while(e.MoveNext())
+    {
+     x=e.Current();
+     fx=f(x);
+     Unchecked.Compare(fx,fm)===-1?(m=x,fm=fx):void 0;
+    }
+   return m;
+  }
+  finally
+  {
+   if("Dispose"in e)
+    e.Dispose();
+  }
  };
  Seq.max=function(s)
  {
-  return Seq.reduce(function($1,$2)
+  var e,m,x;
+  e=Enumerator.Get(s);
+  try
   {
-   return Unchecked.Compare($1,$2)>=0?$1:$2;
-  },s);
+   if(!e.MoveNext())
+    Seq.seqEmpty();
+   m=e.Current();
+   while(e.MoveNext())
+    {
+     x=e.Current();
+     Unchecked.Compare(x,m)===1?m=x:void 0;
+    }
+   return m;
+  }
+  finally
+  {
+   if("Dispose"in e)
+    e.Dispose();
+  }
  };
  Seq.min=function(s)
  {
-  return Seq.reduce(function($1,$2)
+  var e,m,x;
+  e=Enumerator.Get(s);
+  try
   {
-   return Unchecked.Compare($1,$2)<=0?$1:$2;
-  },s);
+   if(!e.MoveNext())
+    Seq.seqEmpty();
+   m=e.Current();
+   while(e.MoveNext())
+    {
+     x=e.Current();
+     Unchecked.Compare(x,m)===-1?m=x:void 0;
+    }
+   return m;
+  }
+  finally
+  {
+   if("Dispose"in e)
+    e.Dispose();
+  }
  };
  Seq.nth=function(index,s)
  {
@@ -5460,7 +5602,7 @@
   try
   {
    if(!e.MoveNext())
-    Operators.FailWith("The input sequence was empty");
+    Seq.seqEmpty();
    r=e.Current();
    while(e.MoveNext())
     r=f(r,e.Current());
@@ -5920,6 +6062,10 @@
  Seq.tail=function(s)
  {
   return Seq.skip(1,s);
+ };
+ Seq.seqEmpty=function()
+ {
+  return Operators.FailWith("The input sequence was empty.");
  };
  Stack.CopyTo=function(stack,array,index)
  {
@@ -6486,7 +6632,7 @@
   },
   TrySetCanceled:function(ct)
   {
-   return!this.task.get_IsCompleted()&&(this.task.status=6,this.task.RunContinuations(),true);
+   return!this.task.get_IsCompleted()&&(this.task.status=6,this.task.token=ct,this.task.RunContinuations(),true);
   },
   TrySetCanceled$1:function()
   {

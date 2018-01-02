@@ -8,14 +8,15 @@ open Microsoft.PowerBI.Security
 open Microsoft.Rest
 open Microsoft.IdentityModel.Clients.ActiveDirectory
 open System.Runtime.InteropServices
-open WebSharper.Sitelets.Content
-open NCF.Private
+//open WebSharper.Sitelets.Content
+//open NCF.Private
 
 let private powerBiClientRefresh () =
     let ``as`` = ConfigurationManager.AppSettings
-    let credential = new UserPasswordCredential(Credential.user1.email, Credential.user1.password);
+    //let credential = new UserPasswordCredential(Credential.user1.email, Credential.user1.password);
+    let credential = new UserPasswordCredential(``as``.["PowerBIUserID"], ``as``.["PowerBIPassword"]);
     let authenticationContext = new AuthenticationContext(``as``.["AuthenticationAuthorityURL"])
-    let authenticationResult = authenticationContext.AcquireTokenAsync(``as``.["PowerBIAuthURL"], Credential.user1.appClientId, credential) |> Async.AwaitTask |> Async.RunSynchronously
+    let authenticationResult = authenticationContext.AcquireTokenAsync(``as``.["PowerBIAuthURL"], ``as``.["PowerBIAppID"], credential) |> Async.AwaitTask |> Async.RunSynchronously
     let tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer")
     new PowerBIClient(new Uri(``as``.["PowerBIApiURL"]), tokenCredentials)
 
