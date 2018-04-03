@@ -68,6 +68,7 @@
     <None Include="Deploy\deploy.cmd" />
     <None Include="Deploy\Deploy.sql" />
     <None Include="Deploy\schema.sql" />
+    <None Include="Deploy\TransferCitectAlarmMessages.sql" />
     <None Include="Test\RunTest.sql" />
     <None Include="Test\Script.fsx" />
     <None Include="Test\StopSqlJob.ps1" />
@@ -75,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\FSharp.Core.4.3.4\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Data.TypeProviders">
       <HintPath>..\packages\FSharp.Data.TypeProviders.5.0.0.2\lib\net40\FSharp.Data.TypeProviders.dll</HintPath>

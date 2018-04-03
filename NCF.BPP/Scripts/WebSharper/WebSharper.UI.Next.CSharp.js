@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,WebSharper,UI,Next,CSharp,ViewExtensions,DocExtension,Client,Helpers,RouteMapBuilder,RouteItemParsers,View,Doc,Var,List,IntelliFactory,Runtime,RouteMap,Seq,Unchecked,Arrays,Collections,Map,Nullable,Operators,FSharpMap,Option;
+ var Global,WebSharper,UI,Next,CSharp,ViewExtensions,DocExtension,Client,Helpers,Obj,RouteMapBuilder,RouteItemParsers,View,Doc,Var,List,IntelliFactory,Runtime,RouteMap,Seq,Unchecked,Arrays,Collections,Map,Nullable,Operators,FSharpMap,Option;
  Global=window;
  WebSharper=Global.WebSharper=Global.WebSharper||{};
  UI=WebSharper.UI=WebSharper.UI||{};
@@ -11,6 +11,7 @@
  DocExtension=CSharp.DocExtension=CSharp.DocExtension||{};
  Client=CSharp.Client=CSharp.Client||{};
  Helpers=Client.Helpers=Client.Helpers||{};
+ Obj=WebSharper&&WebSharper.Obj;
  RouteMapBuilder=Client.RouteMapBuilder=Client.RouteMapBuilder||{};
  RouteItemParsers=Client.RouteItemParsers=Client.RouteItemParsers||{};
  View=Next&&Next.View;
@@ -120,7 +121,7 @@
     $1:this.routes
    });
   }
- },WebSharper.Obj,RouteMapBuilder);
+ },Obj,RouteMapBuilder);
  RouteMapBuilder.New=Runtime.Ctor(function()
  {
   this.links=List.T.Empty;
@@ -210,7 +211,8 @@
   f=RouteItemParsers.ParseShape(shape);
   g=function(o)
   {
-   return o==null?null:b.apply(null,o.$0);
+   var $1;
+   return o==null?null:($1=o.$0,b($1[0],$1[1]));
   };
   return function(x)
   {
@@ -221,7 +223,7 @@
  {
   return function(t)
   {
-   var path,query,$1,fromArray,parseItem,o,length,rest,arr,t$1,o$1;
+   var path,query,$1,fromArray,parseItem,o,$2,length,rest,arr,t$1,o$1;
    function parseArgs(init,rest$1,args)
    {
     var v,o$2;
@@ -266,15 +268,15 @@
    }
    function f(rest$1,t$2)
    {
-    var o$2,parsed,rest$2;
+    var o$2,$3,parsed,rest$2;
     return rest$1==null?null:(o$2=t$2[0]([rest$1.$0,query]),o$2==null?null:{
      $:1,
-     $0:(parsed=o$2.$0[0],(rest$2=o$2.$0[1],(t$1.push(parsed),rest$2)))
+     $0:($3=o$2.$0,(parsed=$3[0],(rest$2=$3[1],(t$1.push(parsed),rest$2))))
     });
    }
    path=t[0];
    query=t[1];
-   return shape.$==1?shape.$1==null?parseArgs(shape.$0,path,shape.$2):path.$==1&&(path.$0===shape.$1.$0&&($1=[path.$1,path.$0],true))?parseArgs(shape.$0,$1[0],shape.$2):null:shape.$==2?(fromArray=shape.$0,(parseItem=shape.$1,(o=RouteItemParsers["System.Int32"]([path,query]),o==null?null:(length=o.$0[0],(rest=o.$0[1],(arr=Arrays.create(length,null),function(i,rest$1)
+   return shape.$==1?shape.$1==null?parseArgs(shape.$0,path,shape.$2):path.$==1&&(path.$0===shape.$1.$0&&($1=[path.$1,path.$0],true))?parseArgs(shape.$0,$1[0],shape.$2):null:shape.$==2?(fromArray=shape.$0,(parseItem=shape.$1,(o=RouteItemParsers["System.Int32"]([path,query]),o==null?null:($2=o.$0,(length=$2[0],(rest=$2[1],(arr=Arrays.create(length,null),function(i,rest$1)
    {
     var m;
     while(true)
@@ -295,7 +297,7 @@
        else
         return null;
       }
-   }(0,rest))))))):shape.$==3?(t$1=[],(o$1=(((Runtime.Curried3(Arrays.fold))(f))({
+   }(0,rest)))))))):shape.$==3?(t$1=[],(o$1=(((Runtime.Curried3(Arrays.fold))(f))({
     $:1,
     $0:path
    }))(shape.$0),o$1==null?null:{

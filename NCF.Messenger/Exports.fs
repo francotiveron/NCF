@@ -1,7 +1,5 @@
 ﻿module NCF.Messenger.Exports
 
-open NCF.Messenger.DllExport
-
 [<DllExport("NCFx_Send_AlarmEvent")>]
 let ncfxSendAlarmEvent(event:string) : int = 
     try 
