@@ -10,7 +10,7 @@
         }
 
         #reportContainer {
-            height: 100%; 
+            height: 100%;
         }
     </style>
     <script src="https://npmcdn.com/es6-promise@3.2.1"></script>
@@ -19,20 +19,26 @@
 <body>
     <div id="reportContainer"></div>
     <script>
-        function init(title, embed_config) {
-            function _clone(cfg) {
-                for (var k in cfg) {
-                    if (typeof(cfg[k]) === 'object') 
-                        this[k] = new _clone(cfg[k]);
-                    else
-                        this[k] = cfg[k];
+        (init = function () {
+            var title = "${{rplcTitle}}";
+
+            var models = window['powerbi-client'].models;
+            var permissions = models.Permissions.All;
+
+            var config = {
+                type: 'report',
+                tokenType: models.TokenType.Embed,
+                accessToken: "${{rplcEmbedToken}}",
+                embedUrl: "${{rplcEmbedUrl}}",
+                id: "${{rplcReportId}}",
+                permissions: permissions,
+                settings: {
+                    filterPaneEnabled: true,
+                    navContentPaneEnabled: true
                 }
             };
 
-            //debugger;
-            //var config = new configConstructor(embed_config);
             try {
-                var config = new _clone(embed_config);
                 var reportContainer = document.getElementById('reportContainer');
                 var reportFrame = powerbi.embed(reportContainer, config);
                 reportFrame.fullscreen();
@@ -41,8 +47,7 @@
             catch (err) {
                 alert("Error: " + err);
             }
-        }
-        var pageInit = this.init;
+        })();
     </script>
 </body>
 </html>

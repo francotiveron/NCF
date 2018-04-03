@@ -9,39 +9,57 @@
             margin: 0;
         }
 
-        #reportContainer {
-            height: 100%; 
+        #pbiContainer {
+            height: 100%;
         }
     </style>
     <script src="https://npmcdn.com/es6-promise@3.2.1"></script>
     <script src="${Root}/scripts/powerbi.js"></script>
 </head>
 <body>
-    <div id="reportContainer"></div>
+    <div id="pbiContainer"></div>
     <script>
+        function build_config(type) {
+            var models = window['powerbi-client'].models;
+            var config = {};
+
+            switch (type) {
+                case 'report':
+                    var permissions = models.Permissions.All;
+
+                    config = {
+                        type: 'report',
+                        tokenType: models.TokenType.Embed,
+                        accessToken: "${{rplcEmbedToken}}",
+                        embedUrl: "${{rplcEmbedUrl}}",
+                        id: "${{rplcId}}",
+                        permissions: permissions,
+                        settings: {
+                            filterPaneEnabled: true,
+                            navContentPaneEnabled: true
+                        }
+                    };
+                    break;
+                case 'dashboard':
+                    config = {
+                        type: 'dashboard',
+                        tokenType: models.TokenType.Embed,
+                        accessToken: "${{rplcEmbedToken}}",
+                        embedUrl: "${{rplcEmbedUrl}}",
+                        id: "${{rplcId}}",
+                    };
+                    break;
+            }
+            return config;
+        }
         (init = function () {
             var title = "${{rplcTitle}}";
 
-            var models = window['powerbi-client'].models;
-            var permissions = models.Permissions.All;
-
-            var config = {
-                type: 'report',
-                tokenType: models.TokenType.Embed,
-                accessToken: "${{rplcEmbedToken}}",
-                embedUrl: "${{rplcEmbedUrl}}",
-                id: "${{rplcReportId}}",
-                permissions: permissions,
-                settings: {
-                    filterPaneEnabled: true,
-                    navContentPaneEnabled: true
-                }
-            };
-
+            var config = build_config("${{rplcType}}");
             try {
-                var reportContainer = document.getElementById('reportContainer');
-                var reportFrame = powerbi.embed(reportContainer, config);
-                reportFrame.fullscreen();
+                var pbiContainer = document.getElementById('pbiContainer');
+                var pbiFrame = powerbi.embed(pbiContainer, config);
+                pbiFrame.fullscreen();
                 document.title = title;
             }
             catch (err) {

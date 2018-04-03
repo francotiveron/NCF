@@ -9,6 +9,7 @@ open System.IO
 type EndPoint =
     | [<EndPoint "/">] Home
     | [<EndPoint "/about">] About
+    | [<EndPoint "/refresh">] Refresh
 
 module private Util = 
     let appPath (ctx: Context<EndPoint>) = 
@@ -18,23 +19,27 @@ module FrontEnd =
     open WebSharper.UI.Next.Html
     open State
     open WebSharper.UI.Next.Html.Tags
+    open System.Web
 
-    let private renderReport groupId (r:Report) : Doc =
+    let private renderResource groupId (m:Metadata) : Doc =
         divAttr 
             [
+                attr.``data-`` "pbiType" m.Type
                 attr.``data-`` "groupId" groupId
-                attr.``data-`` "reportId" r.id
-                attr.``data-`` "embedUrl" r.embedUrl
+                attr.``data-`` "resourceId" m.id
+                attr.``data-`` "embedUrl" m.embedUrl
             ]
             [
-                aAttr [attr.href "#"; on.click <@ Client.reportClicked @>]  [text r.name]
+                aAttr [attr.href "#"; on.click <@ Client.pbiLinkClicked @>]  [text (m.TypeId + " -> " + m.name)]
             ] 
             :> Doc
 
-    let private renderReports groupId (reports:Map<string, Report>) = 
-        reports 
+    let private renderResources groupId (resources:Map<string, Metadata>) = 
+        resources
         |> Map.toSeq
-        |> Seq.map (fun (_, r) -> renderReport groupId r)
+        |> Seq.map (fun (_, r) -> r)
+        |> Seq.sortBy (fun r -> r.name)
+        |> Seq.map (fun r -> renderResource groupId r)
         |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
@@ -53,7 +58,7 @@ module FrontEnd =
                 [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
                 [divAttr
                     [attr.``class`` "panel-body"]
-                    [w.reports |> renderReports w.id]
+                    ([w.resources |> renderResources w.id])
                 ]
             ]
             :> Doc
@@ -96,6 +101,7 @@ module FrontEnd =
         (About.paragraphs 
             |> List.map (fun (title, content) -> [h2 [text title] :> Doc; pAttr [attr.``class`` "about-text"] content :> Doc])
             |> List.concat)
+            //@ [div [text (HttpContext.Current.User.Identity.Name)]]
 
 module Templating =
     open WebSharper.UI.Next.Html
@@ -110,7 +116,7 @@ module Templating =
                 .Root(Util.appPath ctx)
                 .Doc())
 
-    let About (ctx: Context<EndPoint>) =
+    let About (ctx: Context<EndPoint>) = 
         Content.Page(     
             Template()
                 .Body(FrontEnd.bodyAbout())
@@ -129,9 +135,10 @@ module Site =
         Templating.About ctx
 
     [<Website>]
-    let Main =
+    let Main = 
         Application.MultiPage (fun ctx endpoint ->
             match endpoint with
             | EndPoint.Home -> HomePage ctx
             | EndPoint.About -> AboutPage ctx
+            | EndPoint.Refresh -> State.refresh(); HomePage ctx
         )
