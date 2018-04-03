@@ -25,6 +25,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <NameOfLastUsedPublishProfile>NCF.BPP</NameOfLastUsedPublishProfile>
+    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
