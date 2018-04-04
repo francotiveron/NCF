@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NCF.BPP - Main</title>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="${Root}/styles/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="${Root}/styles/NCF.BPP.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <img alt="Northparkes" src="${Root}/images/logo.png">
+                    </div>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="${HomeActive}"><a href="${Root}">Home</a></li>
+                        <li class="${AboutActive}"><a href="${Root}/about">About</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contacts<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="mailto://franco.tiveron@northparkes.com">Portal - Franco Tiveron</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="mailto://mitchell.garside@northparkes.com">Power BI - Mitchell Garside</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a target="_blank" href="http://aunpmzap1.npmprod.org/ug_processmore/downtime/downtimelist.aspx">UG PMORE</a></li>
+                        <li><a target="_blank" href="http://aunpmweb1/OPD_ProcessMORe/Production/productionlist.aspx?tabindex=2&tabid=402">OPD PMORE</a></li>
+                        <li><a target="_blank" href="https://powerbi.microsoft.com/">POWER BI</a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+        <div ws-replace="Body" />
+        <div class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+                <p class="navbar-text pull-left"><span>Northparkes Common Framework - Business Production Portal (© 2017 - </span><a target="_blank" href="http://www.northparkes.com">northparkes.com</a><span>)</span></p>
+            </div>
+        </div>
+    </div>
+    <!---->
+    <script src="${Root}/scripts/jquery/jquery-3.2.1.min.js"></script>
+    <script src="${Root}/scripts/bootstrap/bootstrap.min.js"></script>
+    <script ws-replace="scripts"></script>
+</body>
+</html>

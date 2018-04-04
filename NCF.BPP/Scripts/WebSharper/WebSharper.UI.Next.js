@@ -148,7 +148,7 @@
   function loop(off,len)
   {
    var $1,l2;
-   return len<=0?defaultValue:len===1&&(off>=0&&off<l&&true)?mapping(Arrays.get(array,off)):(l2=len/2>>0,reduction(loop(off,l2),loop(off+l2,len-l2)));
+   return len<=0?defaultValue:len===1&&(off>=0&&off<l)?mapping(Arrays.get(array,off)):(l2=len/2>>0,reduction(loop(off,l2),loop(off+l2,len-l2)));
   }
   l=Arrays.length(array);
   return loop(0,l);
@@ -159,7 +159,7 @@
   function loop(off,len)
   {
    var $1,l2;
-   return len<=0?defaultValue:len===1&&(off>=0&&off<l&&true)?Arrays.get(array,off):(l2=len/2>>0,reduction(loop(off,l2),loop(off+l2,len-l2)));
+   return len<=0?defaultValue:len===1&&(off>=0&&off<l)?Arrays.get(array,off):(l2=len/2>>0,reduction(loop(off,l2),loop(off+l2,len-l2)));
   }
   l=Arrays.length(array);
   return loop(0,l);
@@ -563,7 +563,7 @@
  };
  Trie.IsLeaf=function(t)
  {
-  return t.$==2&&true;
+  return t.$==2;
  };
  Trie.MergeMaps=function(merge,maps)
  {
@@ -693,7 +693,7 @@
   function cont(a)
   {
    var m,$1,$2;
-   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2&&true))
+   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2))
     {
      $1=Snap.ValueAndForever(sn1);
      $2=Snap.ValueAndForever(sn2);
@@ -715,7 +715,7 @@
   function cont(a)
   {
    var m,$4,$5,$6;
-   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2&&true))
+   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2))
     {
      $4=Snap.ValueAndForever(sn1);
      $5=Snap.ValueAndForever(sn2);
@@ -783,7 +783,7 @@
   function cont()
   {
    var m,$3,$4;
-   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2&&true))
+   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2))
     {
      $3=Snap.ValueAndForever(sn1);
      $4=Snap.ValueAndForever(sn2);
@@ -807,7 +807,7 @@
   function cont(a)
   {
    var m,$3,$4;
-   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2&&true))
+   if(!(m=res.s,m!=null&&m.$==0||m!=null&&m.$==2))
     {
      $3=Snap.ValueAndForever(sn1);
      $4=Snap.ValueAndForever(sn2);
@@ -901,7 +901,8 @@
      Arrays.forall(function(a$1)
      {
       var $1;
-      return($1=a$1.s,$1!=null&&$1.$==0)&&true;
+      $1=a$1.s;
+      return $1!=null&&$1.$==0;
      },snaps$1)?Snap.MarkForever(res,vs):Snap.MarkReady(res,vs);
     }
    else
@@ -949,7 +950,7 @@
    Snap.When(y,function(v)
    {
     var $1,$2;
-    if(($1=y.s,$1!=null&&$1.$==0)&&true&&(($2=snap.s,$2!=null&&$2.$==0)&&true))
+    if(($1=y.s,$1!=null&&$1.$==0)&&($2=snap.s,$2!=null&&$2.$==0))
      Snap.MarkForever(res,v);
     else
      Snap.MarkReady(res,v);
@@ -973,7 +974,7 @@
    Snap.When(y,function(v)
    {
     var $1,$2;
-    if(($1=y.s,$1!=null&&$1.$==0)&&true&&(($2=snap.s,$2!=null&&$2.$==0)&&true))
+    if(($1=y.s,$1!=null&&$1.$==0)&&($2=snap.s,$2!=null&&$2.$==0))
      Snap.MarkForever(res,v);
     else
      Snap.MarkReady(res,v);
@@ -1060,7 +1061,7 @@
  Snap.MarkDone=function(res,sn,v)
  {
   var $1;
-  if(($1=sn.s,$1!=null&&$1.$==0)&&true)
+  if($1=sn.s,$1!=null&&$1.$==0)
    Snap.MarkForever(res,v);
   else
    Snap.MarkReady(res,v);
@@ -1572,7 +1573,7 @@
   });
   return View.CreateLazy(function()
   {
-   return sInit.s==null&&true?Snap.SnapshotOn(a(),a$1()):(Snap.WhenObsolete(a(),sInit),sInit);
+   return sInit.s==null?Snap.SnapshotOn(a(),a$1()):(Snap.WhenObsolete(a(),sInit),sInit);
   });
  };
  View.GetAsync=function(v)
@@ -1666,7 +1667,7 @@
   {
    var c,$1;
    c=lv.c;
-   return c===null?(c=lv.o(),lv.c=c,($1=c.s,$1!=null&&$1.$==0)&&true?lv.o=null:Snap.WhenObsoleteRun(c,function()
+   return c===null?(c=lv.o(),lv.c=c,($1=c.s,$1!=null&&$1.$==0)?lv.o=null:Snap.WhenObsoleteRun(c,function()
    {
     lv.c=null;
    }),c):c;
@@ -2734,7 +2735,7 @@
    },($1=this.visible,($2=this.logical,$1!=null&&$1.$==1&&($2!=null&&$2.$==1&&(this.dirty&&($3=[$2.$0,$1.$0],true)))?An.Pack(An.Map(function(v)
    {
     $this.pushVisible(parent,v);
-   },Trans.AnimateChange(this.tr,$3[1],$3[0]))):$1==null&&($2!=null&&$2.$==1&&true)?An.Pack(An.Map(function(v)
+   },Trans.AnimateChange(this.tr,$3[1],$3[0]))):$1==null&&($2!=null&&$2.$==1)?An.Pack(An.Map(function(v)
    {
     $this.pushVisible(parent,v);
    },Trans.AnimateEnter(this.tr,$2.$0))):An.get_Empty())));
@@ -5063,7 +5064,7 @@
    },$1?$1.$0:void 0)
   },["Render"]);
   updates=Array.TreeReduce(View.Const(),View.Map2Unit,updates$1);
-  return els&&Arrays.length(els)===1&&(Arrays.get(els,0)instanceof Node&&(Unchecked.Equals(Arrays.get(els,0).nodeType,Node.ELEMENT_NODE)&&($2=Arrays.get(els,0),true)))?Elt.TreeNode(docTreeNode,updates):Doc.Mk({
+  return!Unchecked.Equals(els,null)&&els.length===1&&(Arrays.get(els,0)instanceof Node&&(Unchecked.Equals(Arrays.get(els,0).nodeType,Node.ELEMENT_NODE)&&($2=Arrays.get(els,0),true)))?Elt.TreeNode(docTreeNode,updates):Doc.Mk({
    $:6,
    $0:docTreeNode
   },updates);
@@ -5430,7 +5431,7 @@
    var m,k;
    function p($1)
    {
-    return $1===k?false:true;
+    return $1!==k;
    }
    m=doc.docNode;
    m!=null&&m.$==1?(k=m.$0.ElKey,this.treeNode.Holes=Arrays.filter(function(h)

@@ -32,12 +32,12 @@ let internal paragraphs : (string * Doc list) list =
         [p 
             [text 
                 """
-                Our business has several different applications for this data (ProcessMORe UG and OPD, PI, IBA, SCADA, SAP, LIMS, AutoMine, Excel). Each one of them is separate from the others,
+                Our business has several different applications for this data (PI, IBA, SCADA, SAP, LIMS, AutoMine, Excel). Each one of them is separate from the others,
                 not only as data repository, but especially as front-end. If you want to see PI data, you need to open excel and use Data Link, or ProcessBook and trend them.
                 For more in depth trending capabilities you need to look inside the SCADA application, but not everything is there as for the Winder data is in the IBA logger.
-                Laboratory data can be seen in the LIMS user interface and some of it go to ProcessMORe but much do not. Extraction level data is in the Automine Sandvik application and most of it is not
+                Laboratory data can be seen in the LIMS user interface. Extraction level data is in the Automine Sandvik application and most of it is not
                 even visible to the majority of us.
-                We have an equipment database which is not centralized, but repeated into different application: SAP has its own, and so have ProcessMORe, SCADA, PI. 
+                We have an equipment database which is not centralized, but repeated into different application: SAP has its own, and so have SCADA and PI. 
                 These are far from being synchronized, which of course makes more difficult to get good information out of them.
                 """
             ]
@@ -49,8 +49,7 @@ let internal paragraphs : (string * Doc list) list =
             [text 
                 """
                 Is it possible to have a unique and uniform application showing all or at least the majority of production information? Of course it is, but how?
-                The only public report sent to all in Northparkes is the daily production report sent to us through email. There is also ProcessMORe giving reports,
-                but it is an old product difficult to maintain or upgrade.
+                The only public report sent to all in Northparkes is the daily production report sent to us through email. 
                 """
             ]
          p 

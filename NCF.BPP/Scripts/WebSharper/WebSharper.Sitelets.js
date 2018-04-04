@@ -1,10 +1,11 @@
 (function()
 {
  "use strict";
- var Global,WebSharper,Sitelets,PathUtil,Route,List,Router,Obj,RouterModule,ListArrayConverter,RouterOperators,SC$1,Strings,Seq,Collections,Map,List$1,Arrays,IntelliFactory,Runtime,FSharpMap,Utils,console,Unchecked,Nullable,Numeric,Lazy,Concurrency,$,Operators,Char,System,Guid,Slice;
+ var Global,WebSharper,Sitelets,StringEncoding,PathUtil,Route,List,Router,Obj,RouterModule,ListArrayConverter,RouterOperators,SC$1,Strings,String,List$1,Seq,Collections,Map,Arrays,IntelliFactory,Runtime,FSharpMap,Unchecked,Utils,console,Lazy,Nullable,Numeric,Concurrency,$,Operators,Char,System,Guid,Slice;
  Global=window;
  WebSharper=Global.WebSharper=Global.WebSharper||{};
  Sitelets=WebSharper.Sitelets=WebSharper.Sitelets||{};
+ StringEncoding=Sitelets.StringEncoding=Sitelets.StringEncoding||{};
  PathUtil=Sitelets.PathUtil=Sitelets.PathUtil||{};
  Route=Sitelets.Route=Sitelets.Route||{};
  List=Sitelets.List=Sitelets.List||{};
@@ -15,20 +16,21 @@
  RouterOperators=Sitelets.RouterOperators=Sitelets.RouterOperators||{};
  SC$1=Global.StartupCode$WebSharper_Sitelets$Router=Global.StartupCode$WebSharper_Sitelets$Router||{};
  Strings=WebSharper&&WebSharper.Strings;
+ String=Global.String;
+ List$1=WebSharper&&WebSharper.List;
  Seq=WebSharper&&WebSharper.Seq;
  Collections=WebSharper&&WebSharper.Collections;
  Map=Collections&&Collections.Map;
- List$1=WebSharper&&WebSharper.List;
  Arrays=WebSharper&&WebSharper.Arrays;
  IntelliFactory=Global.IntelliFactory;
  Runtime=IntelliFactory&&IntelliFactory.Runtime;
  FSharpMap=Collections&&Collections.FSharpMap;
+ Unchecked=WebSharper&&WebSharper.Unchecked;
  Utils=WebSharper&&WebSharper.Utils;
  console=Global.console;
- Unchecked=WebSharper&&WebSharper.Unchecked;
+ Lazy=WebSharper&&WebSharper.Lazy;
  Nullable=WebSharper&&WebSharper.Nullable;
  Numeric=WebSharper&&WebSharper.Numeric;
- Lazy=WebSharper&&WebSharper.Lazy;
  Concurrency=WebSharper&&WebSharper.Concurrency;
  $=Global.jQuery;
  Operators=WebSharper&&WebSharper.Operators;
@@ -36,6 +38,77 @@
  System=Global.System;
  Guid=System&&System.Guid;
  Slice=WebSharper&&WebSharper.Slice;
+ StringEncoding.read=function(s)
+ {
+  var buf;
+  buf=[];
+  return function(chars)
+  {
+   var m;
+   while(true)
+    {
+     m=StringEncoding.readEscapedFromChars(chars);
+     if(m[0]===-2)
+      return null;
+     else
+      if(m[0]===-1)
+       return{
+        $:1,
+        $0:(function(s$1)
+        {
+         return function(s$2)
+         {
+          return Strings.concat(s$1,s$2);
+         };
+        }(""))(buf)
+       };
+      else
+       {
+        buf.push(String.fromCharCode(m[0]));
+        chars=m[1];
+       }
+    }
+  }(List$1.ofSeq(Seq.map(function(v)
+  {
+   return v.charCodeAt();
+  },s)));
+ };
+ StringEncoding.readEscapedFromChars=function(chars)
+ {
+  var chars$1,m,m$1,a,b,c,d,y;
+  function read()
+  {
+   var t,h;
+   return chars$1.$==1?(t=chars$1.$1,(h=chars$1.$0,(chars$1=t,h))):-1;
+  }
+  function hex(x)
+  {
+   return x>="0".charCodeAt()&&x<="9".charCodeAt()?x-"0".charCodeAt():x>="a".charCodeAt()&&x<="f".charCodeAt()?x-"a".charCodeAt()+10:x>="A".charCodeAt()&&x<="F".charCodeAt()?x-"A".charCodeAt()+10:-2;
+  }
+  chars$1=chars;
+  return[(m=read(),m==="~".charCodeAt()?(m$1=read(),m$1==="u".charCodeAt()?(a=read(),(b=read(),(c=read(),(d=read(),a>=0&&b>=0&&c>=0&&d>=0?StringEncoding.op_PlusPlus(StringEncoding.op_PlusPlus(StringEncoding.op_PlusPlus(hex(a),hex(b)),hex(c)),hex(d)):-2)))):(y=read(),m$1>=0&&y>=0?StringEncoding.op_PlusPlus(hex(m$1),hex(y)):-2)):m),chars$1];
+ };
+ StringEncoding.op_PlusPlus=function(a,b)
+ {
+  return(a<<4)+b;
+ };
+ StringEncoding.write=function(s)
+ {
+  return Strings.concat("",Seq.mapi(function(i,c)
+  {
+   return StringEncoding.writeEscapedAsString(i+1===s.length,c);
+  },s));
+ };
+ StringEncoding.writeEscapedAsString=function(isLast,c)
+ {
+  var k;
+  k=c.charCodeAt();
+  return StringEncoding.isUnreserved(isLast,c)?c:k<256?"~"+Strings.PadLeftWith(k.toString(16),2,"0"):"~u"+Strings.PadLeftWith(k.toString(16),4,"0");
+ };
+ StringEncoding.isUnreserved=function(isLast,c)
+ {
+  return c==="-"||(c==="."?!isLast:c==="_"||(c>="A"&&c<="Z"||(c>="a"&&c<="z"||c>="0"&&c<="9")));
+ };
  PathUtil.WriteLink=function(s,q)
  {
   var query;
@@ -103,7 +176,7 @@
   {
    var m,v;
    m=Strings.SplitChars(kv,["="],0);
-   return m&&Arrays.length(m)===2?(v=Arrays.get(m,1),{
+   return!Unchecked.Equals(m,null)&&m.length===2?(v=Arrays.get(m,1),{
     $:1,
     $0:[Arrays.get(m,0),v]
    }):((function($1)
@@ -144,8 +217,8 @@
        p=Arrays.get(paths$1,i);
        m$1=p.Method;
        m$1!=null&&m$1.$==1?method=m$1:void 0;
-       m$2=p.Body;
-       m$2!=null&&m$2.$==1?body=m$2:void 0;
+       m$2=p.Body.f();
+       m$2===null?void 0:body=m$2;
        queryArgs=Map.FoldBack(function(k,v,t)
        {
         return t.Add(k,v);
@@ -160,7 +233,7 @@
        },p.Segments);
        i=i+1;
       }());
-     return Route.New(List$1.ofSeq(segments),queryArgs,formData,method,body);
+     return Route.New(List$1.ofSeq(segments),queryArgs,formData,method,Lazy.CreateFromValue(body));
     }
  };
  Route.Segment=function(s,m)
@@ -183,7 +256,7 @@
  };
  Route.get_Empty=function()
  {
-  return Route.New(List$1.T.Empty,new FSharpMap.New([]),new FSharpMap.New([]),null,null);
+  return Route.New(List$1.T.Empty,new FSharpMap.New([]),new FSharpMap.New([]),null,Lazy.CreateFromValue(null));
  };
  Route.New=function(Segments,QueryArgs,FormData,Method,Body)
  {
@@ -522,7 +595,7 @@
     return o!=null;
    },parts)?{
     $:1,
-    $0:Seq.append([Route.Segment$2(Global.String(Arrays.length(value)))],Seq.collect(function(o)
+    $0:Seq.append([Route.Segment$2(String(Arrays.length(value)))],Seq.collect(function(o)
     {
      return o.$0;
     },parts))
@@ -719,10 +792,10 @@
  {
   var m,path,settings,r,m$1,m$2,fd;
   m=RouterModule.Write(router,endpoint);
-  return m!=null&&m.$==1?(path=m.$0,(settings=(r={},r.dataType="text",r),(m$1=path.Method,m$1!=null&&m$1.$==1?settings.type=m$1.$0:void 0,m$2=path.Body,m$2!=null&&m$2.$==1?(settings.contentType="application/json",settings.data=m$2.$0,settings.processData=false,path.Method==null?settings.type="POST":void 0):(!path.FormData.get_IsEmpty()?(fd=new Global.FormData(),Map.Iterate(function(k,v)
+  return m!=null&&m.$==1?(path=m.$0,(settings=(r={},r.dataType="text",r),(m$1=path.Method,m$1!=null&&m$1.$==1?settings.type=m$1.$0:void 0,m$2=path.Body.f(),m$2===null?(!path.FormData.get_IsEmpty()?(fd=new Global.FormData(),Map.Iterate(function(k,v)
   {
    return fd.append(k,v);
-  },path.FormData),settings.contentType=false,settings.data=fd,settings.processData=false):void 0,path.Method==null?settings.type="POST":void 0),Concurrency.FromContinuations(function(ok,err)
+  },path.FormData),settings.contentType=false,settings.data=fd,settings.processData=false):void 0,path.Method==null?settings.type="POST":void 0):(settings.contentType="application/json",settings.data=m$2,settings.processData=false,path.Method==null?settings.type="POST":void 0),Concurrency.FromContinuations(function(ok,err)
   {
    settings.success=function(res)
    {
@@ -802,18 +875,15 @@
  {
   return Router.New$1(function(path)
   {
-   var m,o;
-   m=(o=path.Body,o==null?null:deserialize(o.$0));
-   return m!=null&&m.$==1?[[Route.New(path.Segments,path.QueryArgs,path.FormData,path.Method,null),m.$0]]:[];
+   var m,m$1;
+   m=path.Body.f();
+   return m===null?[]:(m$1=deserialize(m),m$1!=null&&m$1.$==1?[[Route.New(path.Segments,path.QueryArgs,path.FormData,path.Method,Lazy.CreateFromValue(null)),m$1.$0]]:[]);
   },function(value)
   {
    var i;
    return{
     $:1,
-    $0:[(i=Route.get_Empty(),Route.New(i.Segments,i.QueryArgs,i.FormData,i.Method,{
-     $:1,
-     $0:serialize(value)
-    }))]
+    $0:[(i=Route.get_Empty(),Route.New(i.Segments,i.QueryArgs,i.FormData,i.Method,Lazy.CreateFromValue(serialize(value))))]
    };
   });
  };
@@ -949,19 +1019,12 @@
   SC$1.$cctor();
   return SC$1.Empty;
  };
- RouterOperators.JSClass=function(ctor,partsAndFields,subClasses)
+ RouterOperators.JSClass=function(ctor,fields,endpoints,subClasses)
  {
-  var fields;
-  fields=Arrays.ofSeq(Seq.choose(function(p)
+  var partsAndRoutersLists,thisClass;
+  function readFields(value)
   {
-   return p.$==1?{
-    $:1,
-    $0:[p.$0[0],p.$0[1]]
-   }:null;
-  },partsAndFields));
-  return RouterOperators.Class(function(value)
-  {
-   function m(fn,opt)
+   function m$1(fn,opt,a)
    {
     var v;
     return opt?(v=value[fn],Unchecked.Equals(v,void 0)?null:{
@@ -971,12 +1034,13 @@
    }
    return Arrays.map(function($1)
    {
-    return m($1[0],$1[1]);
+    return m$1($1[0],$1[1],$1[2]);
    },fields);
-  },function(fieldValues)
+  }
+  function createObject(fieldValues)
   {
    var o;
-   function a(fn,opt)
+   function a(fn,opt,a$1)
    {
     return function(v)
     {
@@ -994,76 +1058,86 @@
    {
     return(function($3)
     {
-     return a($3[0],$3[1]);
+     return a($3[0],$3[1],$3[2]);
     }($1))($2);
    }))(fields))(fieldValues);
    return o;
-  },Arrays.map(function(p)
+  }
+  function m(m$1,ep)
   {
-   return p.$==1?{
-    $:1,
-    $0:p.$0[2]
-   }:{
-    $:0,
-    $0:p.$0
-   };
-  },partsAndFields),subClasses);
- };
- RouterOperators.Class=function(readFields,createObject,partsAndFields,subClasses)
- {
-  var partsAndFieldsList,thisClass;
-  partsAndFieldsList=List$1.ofArray(partsAndFields);
+   return[m$1,List$1.ofSeq(Seq.map(function(p)
+   {
+    return typeof p=="number"?{
+     $:1,
+     $0:[p,(Arrays.get(fields,p))[2]]
+    }:{
+     $:0,
+     $0:p
+    };
+   },ep))];
+  }
+  partsAndRoutersLists=Arrays.map(function($1)
+  {
+   return m($1[0],$1[1]);
+  },endpoints);
   thisClass=Router.New$1(function(path)
   {
-   function collect(fields,path$1,acc)
+   function collect(fields$1,path$1,arr)
    {
-    var t,m,$1;
-    function m$1(p,a)
+    var i,t,m$2,$1;
+    function m$3(p,a)
     {
-     return collect(t,p,new List$1.T({
-      $:1,
-      $0:a,
-      $1:acc
-     }));
+     var narr;
+     narr=arr.slice();
+     Arrays.set(narr,i,a);
+     return collect(t,p,narr);
     }
-    return fields.$==1?fields.$0.$==1?(t=fields.$1,Seq.collect(function($2)
+    return fields$1.$==1?fields$1.$0.$==1?(i=fields$1.$0.$0[0],(t=fields$1.$1,Seq.collect(function($2)
     {
-     return m$1($2[0],$2[1]);
-    },fields.$0.$0.Parse(path$1))):(m=path$1.Segments,m.$==1&&(m.$0===fields.$0.$0&&($1=[m.$0,m.$1],true))?collect(fields.$1,Route.New($1[1],path$1.QueryArgs,path$1.FormData,path$1.Method,path$1.Body),acc):[]):[[path$1,createObject(Arrays.ofList(List$1.rev(acc)))]];
+     return m$3($2[0],$2[1]);
+    },fields$1.$0.$0[1].Parse(path$1)))):(m$2=path$1.Segments,m$2.$==1&&(m$2.$0===fields$1.$0.$0&&($1=[m$2.$0,m$2.$1],true))?collect(fields$1.$1,Route.New($1[1],path$1.QueryArgs,path$1.FormData,path$1.Method,path$1.Body),arr):[]):[[path$1,createObject(arr)]];
    }
-   return collect(partsAndFieldsList,path,List$1.T.Empty);
+   function m$1(m$2,ps)
+   {
+    return RouterOperators.isCorrectMethod(m$2,path.Method)?collect(ps,path,Arrays.create(Arrays.length(fields),null)):[];
+   }
+   return Seq.collect(function($1)
+   {
+    return m$1($1[0],$1[1]);
+   },partsAndRoutersLists);
   },function(value)
   {
-   var fields,index,parts;
-   fields=readFields(value);
-   index=-1;
+   var values,p,method,parts,w,i;
+   values=readFields(value);
+   p=Arrays.get(endpoints,0);
+   method=p[0];
    parts=Arrays.map(function(a)
    {
-    return a.$==1?(index=index+1,a.$0.Write(Arrays.get(fields,index))):{
+    return typeof a=="number"?(Arrays.get(fields,a))[2].Write(Arrays.get(values,a)):{
      $:1,
-     $0:[Route.Segment$2(a.$0)]
+     $0:[Route.Segment$2(a)]
     };
-   },partsAndFields);
+   },p[1]);
    return Arrays.forall(function(o)
    {
     return o!=null;
-   },parts)?{
+   },parts)?(w=Seq.collect(function(o)
+   {
+    return o.$0;
+   },parts),method==null?{
     $:1,
-    $0:Seq.collect(function(o)
-    {
-     return o.$0;
-    },parts)
-   }:null;
+    $0:w
+   }:{
+    $:1,
+    $0:Seq.append([(i=Route.get_Empty(),Route.New(i.Segments,i.QueryArgs,i.FormData,method,i.Body))],w)
+   }):null;
   });
   return subClasses.length==0?thisClass:RouterModule.Sum(Seq.append(subClasses,[thisClass]));
  };
  RouterOperators.JSUnion=function(t,cases)
  {
-  function m(a,m$1,p,r)
-  {
-   return[m$1,p,r];
-  }
-  return RouterOperators.Union(function(value)
+  var parseCases;
+  function getTag(value)
   {
    var constIndex;
    function p($1)
@@ -1075,70 +1149,84 @@
     return p($1[0]);
    },cases);
    return constIndex!=null&&constIndex.$==1?constIndex.$0:value.$;
-  },function(tag,value)
+  }
+  function readFields(tag,value)
   {
-   return Arrays.init(Arrays.length((Arrays.get(cases,tag))[3]),function(i)
+   return Arrays.init(Arrays.length((Arrays.get(cases,tag))[2]),function(i)
    {
-    return value["$"+Global.String(i)];
+    return value["$"+String(i)];
    });
-  },function(tag,fieldValues)
+  }
+  function createCase(tag,fieldValues)
   {
    var o,m$1,$1;
    o=t==null?{}:new t();
    m$1=Arrays.get(cases,tag);
    return($1=m$1[0],$1!=null&&$1.$==1)?m$1[0].$0:(o.$=tag,Seq.iteri(function(i,v)
    {
-    o["$"+Global.String(i)]=v;
+    o["$"+String(i)]=v;
    },fieldValues),o);
-  },Arrays.map(function($1)
+  }
+  function m(i,a)
   {
-   return m($1[0],$1[1],$1[2],$1[3]);
-  },cases));
- };
- RouterOperators.Union=function(getTag,readFields,createCase,cases)
- {
+   var fields;
+   function m$1(m$2,p)
+   {
+    return[i,m$2,p,fields];
+   }
+   fields=a[2];
+   return Seq.map(function($1)
+   {
+    return m$1($1[0],$1[1]);
+   },a[1]);
+  }
+  parseCases=Seq.collect(function($1)
+  {
+   return m($1[0],$1[1]);
+  },Seq.indexed(cases));
   return Router.New$1(function(path)
   {
-   function m(i,a)
+   function m$1(i,m$2,s,fields)
    {
-    var $1,$2,m$1,p,m$2;
-    function collect(fields,path$1,acc)
+    var m$3,p,m$4;
+    function collect(fields$1,path$1,acc)
     {
-     var t;
-     function m$3(p$1,a$1)
+     var t$1;
+     function m$5(p$1,a)
      {
-      return collect(t,p$1,new List$1.T({
+      return collect(t$1,p$1,new List$1.T({
        $:1,
-       $0:a$1,
+       $0:a,
        $1:acc
       }));
      }
-     return fields.$==1?(t=fields.$1,Seq.collect(function($3)
+     return fields$1.$==1?(t$1=fields$1.$1,Seq.collect(function($1)
      {
-      return m$3($3[0],$3[1]);
-     },fields.$0.Parse(path$1))):[[path$1,createCase(i,Arrays.ofList(List$1.rev(acc)))]];
+      return m$5($1[0],$1[1]);
+     },fields$1.$0.Parse(path$1))):[[path$1,createCase(i,Arrays.ofList(List$1.rev(acc)))]];
     }
-    return($1=path.Method,($2=a[0],$1!=null&&$1.$==1?$2!=null&&$2.$==1?$1.$0===$2.$0:true:$2!=null&&$2.$==1?false:true))?(m$1=List.startsWith(List$1.ofArray(a[1]),path.Segments),m$1==null?[]:(p=m$1.$0,(m$2=List$1.ofArray(a[2]),m$2.$==0?[[Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),createCase(i,[])]]:collect(m$2,Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),List$1.T.Empty)))):[];
+    return RouterOperators.isCorrectMethod(m$2,path.Method)?(m$3=List.startsWith(List$1.ofArray(s),path.Segments),m$3==null?[]:(p=m$3.$0,(m$4=List$1.ofArray(fields),m$4.$==0?[[Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),createCase(i,[])]]:collect(m$4,Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),List$1.T.Empty)))):[];
    }
    return Seq.collect(function($1)
    {
-    return m($1[0],$1[1]);
-   },Seq.indexed(cases));
+    return m$1($1[0],$1[1],$1[2],$1[3]);
+   },parseCases);
   },function(value)
   {
-   var tag,p,fields,casePath,fieldParts;
-   function m(v,f)
+   var tag,p,fields,p$1,casePath,fieldParts;
+   function m$1(v,f)
    {
     return f.Write(v);
    }
    tag=getTag(value);
    p=Arrays.get(cases,tag);
    fields=p[2];
-   casePath=[Route.Segment(List$1.ofArray(p[1]),p[0])];
-   return fields&&Arrays.length(fields)===0?{
+   p$1=Arrays.get(p[1],0);
+   casePath=[Route.Segment(List$1.ofArray(p$1[1]),p$1[0])];
+   return!Unchecked.Equals(fields,null)&&fields.length===0?{
     $:1,
     $0:casePath
-   }:(fieldParts=(((Runtime.Curried3(Arrays.map2))(m))(readFields(tag,value)))(fields),Arrays.forall(function(o)
+   }:(fieldParts=(((Runtime.Curried3(Arrays.map2))(m$1))(readFields(tag,value)))(fields),Arrays.forall(function(o)
    {
     return o!=null;
    },fieldParts)?{
@@ -1150,13 +1238,14 @@
    }:null);
   });
  };
+ RouterOperators.isCorrectMethod=function(m,p)
+ {
+  return p!=null&&p.$==1?m!=null&&m.$==1?Unchecked.Equals(p.$0,m.$0):true:!(m!=null&&m.$==1);
+ };
  RouterOperators.JSRecord=function(t,fields)
  {
-  function m(a,a$1,r)
-  {
-   return r;
-  }
-  return RouterOperators.Record(function(value)
+  var fields$1,fieldsList;
+  function readFields(value)
   {
    function m$1(fn,opt,a)
    {
@@ -1170,7 +1259,8 @@
    {
     return m$1($1[0],$1[1],$1[2]);
    },fields);
-  },function(fieldValues)
+  }
+  function createRecord(fieldValues)
   {
    var o;
    function a(fn,opt,a$1)
@@ -1195,42 +1285,43 @@
     }($1))($2);
    }))(fields))(fieldValues);
    return o;
-  },Arrays.map(function($1)
+  }
+  function m(a,a$1,r)
+  {
+   return r;
+  }
+  fields$1=Arrays.map(function($1)
   {
    return m($1[0],$1[1],$1[2]);
-  },fields));
- };
- RouterOperators.Record=function(readFields,createRecord,fields)
- {
-  var fieldsList;
-  fieldsList=List$1.ofArray(fields);
+  },fields);
+  fieldsList=List$1.ofArray(fields$1);
   return Router.New$1(function(path)
   {
-   function collect(fields$1,path$1,acc)
+   function collect(fields$2,path$1,acc)
    {
-    var t;
-    function m(p,a)
+    var t$1;
+    function m$1(p,a)
     {
-     return collect(t,p,new List$1.T({
+     return collect(t$1,p,new List$1.T({
       $:1,
       $0:a,
       $1:acc
      }));
     }
-    return fields$1.$==1?(t=fields$1.$1,Seq.collect(function($1)
+    return fields$2.$==1?(t$1=fields$2.$1,Seq.collect(function($1)
     {
-     return m($1[0],$1[1]);
-    },fields$1.$0.Parse(path$1))):[[path$1,createRecord(Arrays.ofList(List$1.rev(acc)))]];
+     return m$1($1[0],$1[1]);
+    },fields$2.$0.Parse(path$1))):[[path$1,createRecord(Arrays.ofList(List$1.rev(acc)))]];
    }
    return collect(fieldsList,path,List$1.T.Empty);
   },function(value)
   {
    var parts;
-   function m(v,r)
+   function m$1(v,r)
    {
     return r.Write(v);
    }
-   parts=(((Runtime.Curried3(Arrays.map2))(m))(readFields(value)))(fields);
+   parts=(((Runtime.Curried3(Arrays.map2))(m$1))(readFields(value)))(fields$1);
    return Arrays.forall(function(o)
    {
     return o!=null;
@@ -1303,10 +1394,9 @@
  {
   return Router.New$1(function(path)
   {
-   var m;
    function collect(path$1,acc)
    {
-    function m$1(p,a)
+    function m(p,a)
     {
      return collect(p,new List$1.T({
       $:1,
@@ -1316,11 +1406,10 @@
     }
     return path$1.Segments.$==0?[[path$1,List$1.rev(acc)]]:Seq.collect(function($1)
     {
-     return m$1($1[0],$1[1]);
+     return m($1[0],$1[1]);
     },item.Parse(path$1));
    }
-   m=path.Segments;
-   return m.$==1?collect(Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body),List$1.T.Empty):[[path,List$1.T.Empty]];
+   return collect(path,List$1.T.Empty);
   },function(value)
   {
    var parts;
@@ -1341,10 +1430,9 @@
  {
   return Router.New$1(function(path)
   {
-   var m;
    function collect(path$1,acc)
    {
-    function m$1(p,a)
+    function m(p,a)
     {
      return collect(p,new List$1.T({
       $:1,
@@ -1354,11 +1442,10 @@
     }
     return path$1.Segments.$==0?[[path$1,Arrays.ofList(List$1.rev(acc))]]:Seq.collect(function($1)
     {
-     return m$1($1[0],$1[1]);
+     return m($1[0],$1[1]);
     },item.Parse(path$1));
    }
-   m=path.Segments;
-   return m.$==1?collect(Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body),List$1.T.Empty):[[path,[]]];
+   return collect(path,List$1.T.Empty);
   },function(value)
   {
    var parts;
@@ -1489,26 +1576,26 @@
   },[]);
   SC$1.rString=Router.New$1(function(path)
   {
-   var m;
+   var m,m$1;
    m=path.Segments;
-   return m.$==1?[[Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body),Global.decodeURIComponent(m.$0)]]:[];
+   return m.$==1?(m$1=StringEncoding.read(m.$0),m$1!=null&&m$1.$==1?[[Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body),m$1.$0]]:[]):[];
   },function(value)
   {
    return{
     $:1,
-    $0:[Route.Segment$2(value==null?"null":Global.encodeURIComponent(value))]
+    $0:[Route.Segment$2(value==null?"null":StringEncoding.write(value))]
    };
   });
   SC$1.rChar=Router.New$1(function(path)
   {
-   var m,$1;
+   var m,m$1,$1;
    m=path.Segments;
-   return m.$==1&&(m.$0.length===1&&($1=[m.$0,m.$1],true))?[[Route.New($1[1],path.QueryArgs,path.FormData,path.Method,path.Body),Char.Parse(Global.decodeURIComponent($1[0]))]]:[];
+   return m.$==1?(m$1=StringEncoding.read(m.$0),m$1!=null&&m$1.$==1&&(m$1.$0.length===1&&($1=m$1.$0,true))?[[Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body),Char.Parse($1)]]:[]):[];
   },function(value)
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.encodeURIComponent(value))]
+    $0:[Route.Segment$2(value)]
    };
   });
   SC$1.rGuid=Router.New$1(function(path)
@@ -1529,7 +1616,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rInt=Router.New$1(function(path)
@@ -1550,7 +1637,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rDouble=Router.New$1(function(path)
@@ -1562,7 +1649,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rSByte=Router.New$1(function(path)
@@ -1583,7 +1670,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rByte=Router.New$1(function(path)
@@ -1604,7 +1691,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rInt16=Router.New$1(function(path)
@@ -1625,7 +1712,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rUInt16=Router.New$1(function(path)
@@ -1646,7 +1733,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rUInt=Router.New$1(function(path)
@@ -1667,7 +1754,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rInt64=Router.New$1(function(path)
@@ -1688,7 +1775,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rUInt64=Router.New$1(function(path)
@@ -1709,7 +1796,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rSingle=Router.New$1(function(path)
@@ -1721,7 +1808,7 @@
   {
    return{
     $:1,
-    $0:[Route.Segment$2(Global.String(value))]
+    $0:[Route.Segment$2(String(value))]
    };
   });
   SC$1.rBool=Router.New$1(function(path)
@@ -1802,12 +1889,12 @@
    function pad2(x)
    {
     var s$1;
-    s$1=Global.String(x);
+    s$1=String(x);
     return s$1.length===1?"0"+s$1:s$1;
    }
    return{
     $:1,
-    $0:[Route.Segment$2((s=Global.String((new Global.Date(d)).getFullYear()),(m=s.length,m===1?"000"+s:m===2?"00"+s:m===3?"0"+s:s))+"-"+pad2((new Global.Date(d)).getMonth()+1)+"-"+pad2((new Global.Date(d)).getDate())+"-"+pad2((new Global.Date(d)).getHours())+"."+pad2((new Global.Date(d)).getMinutes())+"."+pad2((new Global.Date(d)).getSeconds()))]
+    $0:[Route.Segment$2((s=String((new Global.Date(d)).getFullYear()),(m=s.length,m===1?"000"+s:m===2?"00"+s:m===3?"0"+s:s))+"-"+pad2((new Global.Date(d)).getMonth()+1)+"-"+pad2((new Global.Date(d)).getDate())+"-"+pad2((new Global.Date(d)).getHours())+"."+pad2((new Global.Date(d)).getMinutes())+"."+pad2((new Global.Date(d)).getSeconds()))]
    };
   });
  };

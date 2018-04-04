@@ -1,0 +1,13 @@
+body {
+    padding-top: 65px;
+    padding-bottom: 65px;
+}
+.navbar-nav li a {
+    line-height: 30px;
+}
+.about-text {
+    font-size: large;
+}
+[hidden] {
+    display: none;
+}

@@ -36,7 +36,7 @@
   b=null;
   return Concurrency.Delay(function()
   {
-   return(new AjaxRemotingProvider.New()).Async("NCF.BPP:NCF.BPP.Server.getEmbedTokenAsync:-483179291",[gId,rId]);
+   return(new AjaxRemotingProvider.New()).Async("NCF.BPP:NCF.BPP.Server.getEmbedTokenAsync:-434548513",[gId,rId]);
   });
  };
  Client.openEmbedPage=function(pbiType,name,embedUrl,id,embedToken)
