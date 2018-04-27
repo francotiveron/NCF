@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NCF.AlarmHistory</RootNamespace>
     <AssemblyName>NCF.AlarmHistory</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>NCF.AlarmHistory</Name>
@@ -78,8 +78,8 @@
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\FSharp.Core.4.3.4\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Data.SqlProvider">
-      <HintPath>..\packages\SQLProvider.1.1.41\lib\net451\FSharp.Data.SqlProvider.dll</HintPath>
+    <Reference Include="FSharp.Data.TypeProviders">
+      <HintPath>..\packages\FSharp.Data.TypeProviders.5.0.0.2\lib\net40\FSharp.Data.TypeProviders.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
