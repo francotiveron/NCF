@@ -20,8 +20,7 @@ module XlUI =
 
     let internal newSheet data =
         let excelApplication = new Application(null, ExcelDna.Integration.ExcelDnaUtil.Application)
-
-        //excelApplication.DisplayAlerts <- false
+        excelApplication.DisplayAlerts <- false
         let mutable wb = excelApplication.ActiveWorkbook
         let workSheet = match wb with
                         | null -> wb <- excelApplication.Workbooks.Add(); wb.Worksheets.[1]

@@ -3,7 +3,7 @@
   <Reference Path="NetOffice.dll" Pack="true" />
   <Reference Path="OfficeApi.dll" Pack="true" />
   <Reference Path="ExcelApi.dll" Pack="true" />
-  <Reference Path="FSharp.Data.SqlProvider.dll" Pack="true" />
+  <Reference Path="FSharp.Data.SqlClient.dll" Pack="true" />
   <Reference Path="NCF.Excel.UI.dll" Pack="true" />
   <ExternalLibrary Path="NCF.Excel.dll" ExplicitExports="true" LoadFromBytes="true" Pack="true" />
   
