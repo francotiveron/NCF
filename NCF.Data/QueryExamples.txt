@@ -1,0 +1,7 @@
+﻿- All instances of alarm X occurring in the hour preceding the time where PI tag Y value was > ? 
+(e.g. how many times did I have surge bin full alarm in the hour preceding the event "sec.crusher pressure > 8')
+
+- What was the most active LS feeder in the 2 hours periods with a number of "full surge bin" events > 5 in the past 6 months?
+
+- Is thare a correlation between the frequency of alarm X and the variability of tag Y?
+(e.g. display a line chart showing the alarm frequency in occurrencies/hour and the 15 min std.dev of the pi tag)

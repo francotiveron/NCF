@@ -3,6 +3,10 @@
 open System
 open System.Security.Policy
 
+type Result<'T,'TError> = 
+    | Ok of ResultValue:'T 
+    | Error of ErrorValue:'TError
+
 //Citect EventFmt = zone~{TAG,20}~{NAME,50}~{DESC,50}~{STATE,10}~{AREA,3}~{PRIORITY,3}~{DATEEXT,10}~{TIME,11}~{ONDATEEXT,10}~{ONTIME,11}~{OFFDATEEXT,10}~{OFFTIME,11}~{ACKDATEEXT,10}~{ACKTIME,11}
 type State = On | NotOn
 type CitectAlarmEvent = {

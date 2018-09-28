@@ -15,7 +15,7 @@ let private connectionString = "Data Source=DESKTOP-0N8IBVK; Initial Catalog=Cit
 [<Literal>]
 let private dbVendor = Common.DatabaseProviderTypes.MSSQLSERVER
 type private dbSchema = SqlDataProvider<dbVendor, connectionString>
-let private ctx = dbSchema.GetDataContext(SelectOperations.DatabaseSide)
+let private ctx = dbSchema.GetDataContext("Data Source=AUNPMZAP2; Initial Catalog=CitectAlarms;Integrated Security=True;Pooling=False", SelectOperations.DatabaseSide)
 let private db = ctx.Dbo
 
 let private saveEvent (e:CitectAlarmEvent) =

@@ -5,14 +5,15 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>3fbe46c1-5e14-4839-93d9-c8dba2cb3cba</ProjectGuid>
+    <ProjectGuid>c45695f2-3dff-4396-b005-f121c5d28937</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>NCF.AlarmHistory</RootNamespace>
-    <AssemblyName>NCF.AlarmHistory</AssemblyName>
+    <RootNamespace>Library2</RootNamespace>
+    <AssemblyName>Library2</AssemblyName>
+    <UseStandardResourceNames>true</UseStandardResourceNames>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>NCF.AlarmHistory</Name>
+    <Name>Library2</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -50,59 +51,29 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>(robocopy $(TargetDir) C:\NCF /MIR) ^&amp; IF %ERRORLEVEL% LEQ 3 exit 0</PostBuildEvent>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CitectAlarmEvent.fs" />
-    <Compile Include="DB.fs" />
-    <Compile Include="Log.fs" />
-    <Compile Include="Processor.fs" />
-    <Compile Include="Exports.fs" />
-    <Content Include="Readme.txt" />
-    <None Include="Deploy\deploy.cmd" />
-    <None Include="Deploy\Deploy.sql" />
-    <None Include="Deploy\schema.sql" />
-    <None Include="Deploy\TransferCitectAlarmMessages.sql" />
-    <None Include="Test\RunTest.sql" />
-    <None Include="Test\Script.fsx" />
-    <None Include="Test\StopSqlJob.ps1" />
+    <Compile Include="Library1.fs" />
+    <None Include="Script.fsx" />
     <Content Include="packages.config" />
-    <Content Include="App.config" />
+    <Compile Include="DB.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
-    </Reference>
     <Reference Include="FSharp.Data.SqlProvider">
       <HintPath>..\packages\SQLProvider.1.1.41\lib\net451\FSharp.Data.SqlProvider.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="SMDiagnostics">
-      <HintPath>..\..\..\..\Windows\Microsoft.NET\Framework64\v4.0.30319\SMDiagnostics.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FSharp.Core">
+      <Name>FSharp.Core</Name>
+      <AssemblyName>FSharp.Core.dll</AssemblyName>
+      <HintPath>$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\$(TargetFSharpCoreVersion)\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration.Install">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Messaging">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.Serialization">
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="System.ServiceModel.Internals">
-      <HintPath>..\..\..\..\Windows\Microsoft.NET\Framework64\v4.0.30319\System.ServiceModel.Internals.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
