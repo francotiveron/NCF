@@ -38,6 +38,7 @@ module FrontEnd =
         resources
         |> Map.toSeq
         |> Seq.map (fun (_, r) -> r)
+        |> Seq.filter (fun r -> r.``type`` = PowerBI.Dashboard)
         |> Seq.sortBy (fun r -> r.name)
         |> Seq.map (fun r -> renderResource groupId r)
         |> Doc.Concat
