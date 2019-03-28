@@ -34,13 +34,13 @@ module FrontEnd =
             ] 
             :> Doc
 
-    let private renderResources groupId (resources:Map<string, Metadata>) = 
+    let private renderResources (w:Workspace) (resources:Map<string, Metadata>) = 
         resources
         |> Map.toSeq
         |> Seq.map (fun (_, r) -> r)
-        |> Seq.filter (fun r -> r.``type`` = PowerBI.Dashboard)
+        |> Seq.filter (fun r -> r.``type`` = PowerBI.Dashboard || w.name <> "Asset Management")
         |> Seq.sortBy (fun r -> r.name)
-        |> Seq.map (fun r -> renderResource groupId r)
+        |> Seq.map (fun r -> renderResource w.id r)
         |> Doc.Concat
 
     let private renderWorkspace i (w:Workspace) : Doc = 
@@ -59,7 +59,8 @@ module FrontEnd =
                 [attr.``class`` "panel-collapse collapse"; attr.id (sprintf "collapse%d" (i + 1))]
                 [divAttr
                     [attr.``class`` "panel-body"]
-                    ([w.resources |> renderResources w.id])
+                    //([w.resources |> renderResources w.id])
+                    ([w.resources |> renderResources w])
                 ]
             ]
             :> Doc
