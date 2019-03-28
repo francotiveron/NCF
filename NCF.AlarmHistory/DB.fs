@@ -14,8 +14,9 @@ open CitectAlarmEvent
 let private connectionString = "Data Source=DESKTOP-0N8IBVK; Initial Catalog=CitectAlarms;Integrated Security=True;Pooling=False"
 [<Literal>]
 let private dbVendor = Common.DatabaseProviderTypes.MSSQLSERVER
-type private dbSchema = SqlDataProvider<dbVendor, connectionString>
+type private dbSchema = SqlDataProvider<dbVendor, connectionString, UseOptionTypes = true>
 let private ctx = dbSchema.GetDataContext("Data Source=AUNPMZAP2; Initial Catalog=CitectAlarms;Integrated Security=True;Pooling=False", SelectOperations.DatabaseSide)
+//let private ctx = dbSchema.GetDataContext() //for test
 let private db = ctx.Dbo
 
 let private saveEvent (e:CitectAlarmEvent) =
@@ -26,8 +27,8 @@ let private saveEvent (e:CitectAlarmEvent) =
         Location = "cmoc/npm/" + e.zone + "/" + (string e.area),
         Priority = e.priority,
         TimeOn = e.timeOn.Value, 
-        TimeOff = e.timeOff.Value,
-        Duration = (float32 (e.timeOff.Value - e.timeOn.Value).TotalSeconds)
+        TimeOff = e.timeOff,
+        Duration = match e.timeOff with | Some timeOff -> Some (float32 (timeOff - e.timeOn.Value).TotalSeconds) | None -> None
         )
     |> ignore
 
@@ -49,9 +50,9 @@ let private saveEvent (e:CitectAlarmEvent) =
 //Recordable events are OFF with event time >= OffTime and OffTime > OnTime
 let manage (e:CitectAlarmEvent) (logger: string->unit) = 
     match e.state, e.time, e.timeOn, e.timeOff with
-    | On, _, _, _ -> ()
     | _, _, None, _ -> ()
-    | NotOn, t, Some tOn, Some tOff when t >= tOff && tOff > tOn -> saveEvent e
+    | On, t, Some tOn, None when t >= tOn -> saveEvent e
+    | NotOn, t, Some tOn, Some tOff when t >= tOff && tOff >= tOn -> saveEvent e
     | _ -> logger "Invalid Event"
 
     try ctx.SubmitUpdates() with
