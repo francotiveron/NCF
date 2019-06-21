@@ -16,7 +16,7 @@ namespace NCF.Excel.Forms
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("mailto:franco.tiveron@northparkes.com");
+            System.Diagnostics.Process.Start("mailto:franco.tiveron@au.cmoc.com");
         }
     }
 }

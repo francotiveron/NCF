@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NCF.AlarmHistory", "NCF.AlarmHistory\NCF.AlarmHistory.fsproj", "{3FBE46C1-5E14-4839-93D9-C8DBA2CB3CBA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NCF.WinderReporting", "NCF.WinderReporting\NCF.WinderReporting.fsproj", "{3FBE46C1-5E14-4839-93D9-C8DBA2CB3CBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BD90208E-710C-4075-BD6D-FD864335AD5C}
+		SolutionGuid = {9260726B-CC48-43CC-A552-8616DE49E18F}
 	EndGlobalSection
 EndGlobal

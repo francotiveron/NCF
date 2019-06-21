@@ -49,6 +49,18 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CAHQueryParForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CAHQueryParForm.Designer.cs">
+      <DependentUpon>CAHQueryParForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WRRQueryParForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WRRQueryParForm.Designer.cs">
+      <DependentUpon>WRRQueryParForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,23 +68,20 @@
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryParForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="QueryParForm.Designer.cs">
-      <DependentUpon>QueryParForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CAHQueryParForm.resx">
+      <DependentUpon>CAHQueryParForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WRRQueryParForm.resx">
+      <DependentUpon>WRRQueryParForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="QueryParForm.resx">
-      <DependentUpon>QueryParForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

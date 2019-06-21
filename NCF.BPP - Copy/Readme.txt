@@ -1,4 +1,0 @@
-- Scripts & styles Subfolders are not deployed by publish function (must be copied manually when changed)
-- IE supports dynamic creation of page with document.write, Chrome doesn't see the function init.
-- IE could be configured for compatibility view for intranet sites, this must be disabled otherwise bootstrap doesn't work
-- the entry <bindingRedirect oldVersion="0.0.0.0-4.4.1.0" newVersion="4.4.0.0" /> in app.config or web.config could need to be changed manually, otherwise a runtime error occurs

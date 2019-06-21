@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NCF.Excel</RootNamespace>
     <AssemblyName>NCF.Excel</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>NCF.Excel</Name>
@@ -57,6 +57,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="XlUI.fs" />
     <Compile Include="CAH.fs" />
+    <Compile Include="WRR.fs" />
     <Compile Include="Ribbon.fs" />
     <Compile Include="AddIn.fs" />
     <None Include="Script.fsx" />

@@ -20,8 +20,15 @@ type RibbonController() =
                             <button id='queryCAHByZoneButton' onAction='QueryCAHByZone' label='By Zone...' />
                         </menu>
                     </group>
-                    <group id='Resources' label='Resources'>
-                        <button id='abputButton' imageMso='Info' onAction='About' label='About'/>
+                    <group id='WinderReporting' label='Winder Reporting'>
+                        <menu id='queryWRR24HMenu' imageMso='NewPage' description='Query Winder Reporting' label='Last 24h' size='large'>
+                            <button id='queryWRR24HDowntimesButton' onAction='QueryWRRDowntimesLast24h' label='Downtimes...' />
+                            <button id='queryWRR24HCyclesButton' onAction='QueryWRRCyclesLast24h' label='Cycles...' />
+                        </menu>
+                        <button id='queryWRRButton' imageMso='NewPageLayout' onAction='QueryWRR' label='Query' size='large' />
+                    </group>
+                   <group id='Resources' label='Resources'>
+                        <button id='aboutButton' imageMso='Info' onAction='About' label='About'/>
                     </group>
                 </tab>
             </tabs>
@@ -31,4 +38,7 @@ type RibbonController() =
     member this.QueryCAHByZone(control : IRibbonControl) = CAH.getByZone()
     member this.QueryCAHByTime(control : IRibbonControl) = CAH.getByTime()
     member this.QueryCAHLast24h(control : IRibbonControl) = CAH.getLast24h()
+    member this.QueryWRRDowntimesLast24h(control : IRibbonControl) = WRR.getLast24hDowntimes()
+    member this.QueryWRRCyclesLast24h(control : IRibbonControl) = WRR.getLast24hCycles()
+    member this.QueryWRR(control : IRibbonControl) = WRR.getQuery()
     member this.About(control : IRibbonControl) = UI.About(Assembly.GetExecutingAssembly().GetName().Version.ToString());

@@ -8,11 +8,11 @@
     <ProjectGuid>3fbe46c1-5e14-4839-93d9-c8dba2cb3cba</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NCF.AlarmHistory</RootNamespace>
-    <AssemblyName>NCF.AlarmHistory</AssemblyName>
+    <AssemblyName>NCF.WinderReporting</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>NCF.AlarmHistory</Name>
+    <Name>NCF.WinderReporting</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -59,16 +59,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CitectAlarmEvent.fs" />
     <Compile Include="DB.fs" />
-    <Compile Include="Log.fs" />
     <Compile Include="Processor.fs" />
     <Compile Include="Exports.fs" />
     <Content Include="Readme.txt" />
     <None Include="Deploy\deploy.cmd" />
     <None Include="Deploy\Deploy.sql" />
     <None Include="Deploy\schema.sql" />
-    <None Include="Deploy\TransferCitectAlarmMessages.sql" />
+    <None Include="Deploy\TransferWinderReportingMessages.sql" />
     <None Include="Test\RunTest.sql" />
     <None Include="Test\Script.fsx" />
     <None Include="Test\StopSqlJob.ps1" />
@@ -80,7 +78,7 @@
       <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Data.SqlProvider">
-      <HintPath>..\packages\SQLProvider.1.1.65\lib\net451\FSharp.Data.SqlProvider.dll</HintPath>
+      <HintPath>..\packages\SQLProvider.1.1.59\lib\net451\FSharp.Data.SqlProvider.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="SMDiagnostics">

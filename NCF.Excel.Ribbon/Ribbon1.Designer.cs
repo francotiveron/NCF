@@ -69,6 +69,12 @@
             queryMenu.OfficeImageId = "AccountingFormat";
             queryMenu.ShowImage = true;
             // 
+            // button1
+            // 
+            this.button1.Label = "button1";
+            this.button1.Name = "button1";
+            this.button1.ShowImage = true;
+            // 
             // queryButton
             // 
             queryButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
@@ -76,12 +82,6 @@
             queryButton.Name = "queryButton";
             queryButton.ShowImage = true;
             queryButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.QueryLast24h);
-            // 
-            // button1
-            // 
-            this.button1.Label = "button1";
-            this.button1.Name = "button1";
-            this.button1.ShowImage = true;
             // 
             // Ribbon1
             // 
