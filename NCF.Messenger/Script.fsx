@@ -8,6 +8,6 @@ open NCF.Messenger
 //let stp = "STOP"
 //Exports.ncfxSendAlarmEvent stp
 
-let msg1 = "WRR Message"
-Exports.ncfxSendWRREvent msg1
+//let msg1 = "WRR Message"
+//Exports.ncfxSendWRREvent msg1
 
