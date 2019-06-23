@@ -32,9 +32,7 @@ module XlUI =
                 for i = rng.RowFirst + 2 to rng.RowLast do
                     let curStart:DateTime = unbox data.[i, 0]
                     let prevEnd:DateTime = unbox data.[i - 1, 1]
-                    if curStart > prevEnd then
-                        XlCall.Excel(XlCall.xlcSelect, new ExcelReference(i, i, 2, 2)) |> ignore
-                        XlCall.Excel(XlCall.xlcFormula, "=(r[0]c[-2] - r[-1]c[-1])") |> ignore
+                    if curStart > prevEnd then (new ExcelReference(i, i, 2, 2)).SetValue((curStart - prevEnd).TotalDays) |> ignore
             let colparams = [|box 10; box rng; box false; box 3|]
             XlCall.Excel(XlCall.xlcColumnWidth, colparams) |> ignore
             XlCall.Excel(XlCall.xlcSelectEnd, 1) |> ignore

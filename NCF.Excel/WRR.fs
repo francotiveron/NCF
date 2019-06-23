@@ -31,7 +31,7 @@ let private getDowntimes tFrom tTo =
             else
                 i <- i + 1
     }
-    ([box "Begin"; box "End"; box "Duration[m:s.ms]"] :: (downtimes |> Seq.toList)) |> array2D
+    ([box "Begin"; box "End"; box "Duration[d:h:m:s.ms]"] :: (downtimes |> Seq.toList)) |> array2D
 
 let private getCycles tFrom tTo =
     let qry = query {
